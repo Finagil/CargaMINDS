@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Factor100DS" targetNamespace="http://tempuri.org/Factor100DS.xsd" xmlns:mstns="http://tempuri.org/Factor100DS.xsd" xmlns="http://tempuri.org/Factor100DS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection ConnectionStringObject="Data Source=server-raid;Initial Catalog=web_Finagil;Persist Security Info=True;User ID=User_PRO;Password=User_PRO2015" IsAppSettingsProperty="false" Modifier="Assembly" Name="server-raid.Factor100.dbo" ParameterPrefix="@" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="FacturasConSaldoTableAdapter" GeneratorDataComponentClassName="FacturasConSaldoTableAdapter" Name="FacturasConSaldo" UserDataComponentName="FacturasConSaldoTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="Factor100.dbo.WEB_Facturas" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT     WEB_Facturas.Factura, MAX(WEB_Facturas.ImporteFactura) AS ImporteFactura, SUM(ISNULL(WEB_Pagos.Importe, 0)) AS ImportePago
+FROM         WEB_Facturas LEFT OUTER JOIN
+                      WEB_Pagos ON WEB_Facturas.Factura = WEB_Pagos.Factura
+WHERE     (WEB_Facturas.Estatus = 'Descontada') AND (WEB_Pagos.Tipo = 2 OR
+                      WEB_Pagos.Tipo = 4 OR
+                      WEB_Pagos.Tipo IS NULL) AND (CONVERT(decimal, GETDATE() - WEB_Facturas.FechaFactura) &lt;= 120)
+GROUP BY WEB_Facturas.Factura
+HAVING      (MAX(WEB_Facturas.ImporteFactura) &gt; ISNULL(SUM(WEB_Pagos.Importe), 0))
+ORDER BY WEB_Facturas.Factura</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Factura" DataSetColumn="Factura" />
+              <Mapping SourceColumn="ImporteFactura" DataSetColumn="ImporteFactura" />
+              <Mapping SourceColumn="ImportePago" DataSetColumn="ImportePago" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PagosTableAdapter" GeneratorDataComponentClassName="PagosTableAdapter" Name="Pagos" UserDataComponentName="PagosTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="Factor100.dbo.WEB_Pagos" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [WEB_Pagos] WHERE (([Id_Pago] = @Original_Id_Pago) AND ((@IsNull_Factura = 1 AND [Factura] IS NULL) OR ([Factura] = @Original_Factura)) AND ((@IsNull_Fecha = 1 AND [Fecha] IS NULL) OR ([Fecha] = @Original_Fecha)) AND ((@IsNull_Importe = 1 AND [Importe] IS NULL) OR ([Importe] = @Original_Importe)) AND ((@IsNull_Tipo = 1 AND [Tipo] IS NULL) OR ([Tipo] = @Original_Tipo)) AND ((@IsNull_Linea = 1 AND [Linea] IS NULL) OR ([Linea] = @Original_Linea)) AND ((@IsNull_Descargado = 1 AND [Descargado] IS NULL) OR ([Descargado] = @Original_Descargado)) AND ((@IsNull_Enviado = 1 AND [Enviado] IS NULL) OR ([Enviado] = @Original_Enviado)))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Original_Id_Pago" Precision="18" ProviderType="Decimal" Scale="0" Size="0" SourceColumn="Id_Pago" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Fecha" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Importe" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Importe" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Original_Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Tipo" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Tipo" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Tipo" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Tipo" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Linea" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Linea" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Linea" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Linea" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Descargado" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Descargado" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Descargado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Descargado" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Enviado" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [WEB_Pagos] ([Factura], [Fecha], [Importe], [Tipo], [Linea], [Descargado], [Enviado]) VALUES (@Factura, @Fecha, @Importe, @Tipo, @Linea, @Descargado, @Enviado);
+SELECT Id_Pago, Factura, Fecha, Importe, Tipo, Linea, Descargado, Enviado FROM WEB_Pagos WHERE (Id_Pago = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Tipo" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Tipo" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Linea" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Linea" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Descargado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Descargado" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT     Id_Pago, Factura, Fecha, Importe, Tipo, Linea, Descargado, Enviado
+FROM         WEB_Pagos</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [WEB_Pagos] SET [Factura] = @Factura, [Fecha] = @Fecha, [Importe] = @Importe, [Tipo] = @Tipo, [Linea] = @Linea, [Descargado] = @Descargado, [Enviado] = @Enviado WHERE (([Id_Pago] = @Original_Id_Pago) AND ((@IsNull_Factura = 1 AND [Factura] IS NULL) OR ([Factura] = @Original_Factura)) AND ((@IsNull_Fecha = 1 AND [Fecha] IS NULL) OR ([Fecha] = @Original_Fecha)) AND ((@IsNull_Importe = 1 AND [Importe] IS NULL) OR ([Importe] = @Original_Importe)) AND ((@IsNull_Tipo = 1 AND [Tipo] IS NULL) OR ([Tipo] = @Original_Tipo)) AND ((@IsNull_Linea = 1 AND [Linea] IS NULL) OR ([Linea] = @Original_Linea)) AND ((@IsNull_Descargado = 1 AND [Descargado] IS NULL) OR ([Descargado] = @Original_Descargado)) AND ((@IsNull_Enviado = 1 AND [Enviado] IS NULL) OR ([Enviado] = @Original_Enviado)));
+SELECT Id_Pago, Factura, Fecha, Importe, Tipo, Linea, Descargado, Enviado FROM WEB_Pagos WHERE (Id_Pago = @Id_Pago)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Tipo" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Tipo" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Linea" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Linea" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Descargado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Descargado" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Original_Id_Pago" Precision="18" ProviderType="Decimal" Scale="0" Size="0" SourceColumn="Id_Pago" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Fecha" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Importe" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Importe" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Original_Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Tipo" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Tipo" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Tipo" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Tipo" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Linea" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Linea" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Linea" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Linea" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Descargado" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Descargado" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Descargado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Descargado" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Enviado" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="Id_Pago" ColumnName="Id_Pago" DataSourceName="Factor100.dbo.WEB_Pagos" DataTypeServer="numeric" DbType="Decimal" Direction="Input" ParameterName="@Id_Pago" Precision="18" ProviderType="Decimal" Scale="0" Size="9" SourceColumn="Id_Pago" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Id_Pago" DataSetColumn="Id_Pago" />
+              <Mapping SourceColumn="Factura" DataSetColumn="Factura" />
+              <Mapping SourceColumn="Fecha" DataSetColumn="Fecha" />
+              <Mapping SourceColumn="Importe" DataSetColumn="Importe" />
+              <Mapping SourceColumn="Tipo" DataSetColumn="Tipo" />
+              <Mapping SourceColumn="Linea" DataSetColumn="Linea" />
+              <Mapping SourceColumn="Descargado" DataSetColumn="Descargado" />
+              <Mapping SourceColumn="Enviado" DataSetColumn="Enviado" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="ExistePago" Modifier="Public" Name="ExistePago" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="ExistePago">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT     COUNT(*) AS Expr1
+FROM         WEB_Pagos
+WHERE     (Factura = @Fact) AND (Fecha = @Fec) AND (Linea = @Linea) AND (Tipo = @Tipo)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="Fact" ColumnName="Factura" DataSourceName="Factor100.dbo.WEB_Pagos" DataTypeServer="varchar(20)" DbType="AnsiString" Direction="Input" ParameterName="@Fact" Precision="0" ProviderType="VarChar" Scale="0" Size="20" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="Fec" ColumnName="Fecha" DataSourceName="Factor100.dbo.WEB_Pagos" DataTypeServer="datetime" DbType="DateTime" Direction="Input" ParameterName="@Fec" Precision="0" ProviderType="DateTime" Scale="0" Size="8" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="Linea" ColumnName="Linea" DataSourceName="Factor100.dbo.WEB_Pagos" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@Linea" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="Linea" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="Tipo" ColumnName="Tipo" DataSourceName="Factor100.dbo.WEB_Pagos" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@Tipo" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="Tipo" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CancelacionesTotalesTableAdapter" GeneratorDataComponentClassName="CancelacionesTotalesTableAdapter" Name="CancelacionesTotales" UserDataComponentName="CancelacionesTotalesTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="WEB_Finagil.dbo.WEB_CancelacionesTotales" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [WEB_CancelacionesTotales] WHERE (([id_cancelacion] = @Original_id_cancelacion) AND ((@IsNull_Serie = 1 AND [Serie] IS NULL) OR ([Serie] = @Original_Serie)) AND ((@IsNull_Factura = 1 AND [Factura] IS NULL) OR ([Factura] = @Original_Factura)) AND ((@IsNull_Fecha = 1 AND [Fecha] IS NULL) OR ([Fecha] = @Original_Fecha)) AND ((@IsNull_Importe = 1 AND [Importe] IS NULL) OR ([Importe] = @Original_Importe)) AND ((@IsNull_Cancelacion = 1 AND [Cancelacion] IS NULL) OR ([Cancelacion] = @Original_Cancelacion)) AND ((@IsNull_NoCancelacion = 1 AND [NoCancelacion] IS NULL) OR ([NoCancelacion] = @Original_NoCancelacion)) AND ((@IsNull_Enviada = 1 AND [Enviada] IS NULL) OR ([Enviada] = @Original_Enviada)))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id_cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id_cancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Serie" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Fecha" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Importe" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Importe" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Original_Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Cancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Cancelacion" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Cancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Enviada" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Enviada" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Enviada" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviada" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [WEB_CancelacionesTotales] ([Serie], [Factura], [Fecha], [Importe], [Cancelacion], [NoCancelacion], [Enviada]) VALUES (@Serie, @Factura, @Fecha, @Importe, @Cancelacion, @NoCancelacion, @Enviada);
+SELECT id_cancelacion, Serie, Factura, Fecha, Importe, Cancelacion, NoCancelacion, Enviada FROM WEB_CancelacionesTotales WHERE (id_cancelacion = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Cancelacion" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Cancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Enviada" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviada" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        id_cancelacion, Serie, Factura, Fecha, Importe, Cancelacion, NoCancelacion, Enviada
+FROM            WEB_CancelacionesTotales
+WHERE        (Enviada = 0)</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [WEB_CancelacionesTotales] SET [Serie] = @Serie, [Factura] = @Factura, [Fecha] = @Fecha, [Importe] = @Importe, [Cancelacion] = @Cancelacion, [NoCancelacion] = @NoCancelacion, [Enviada] = @Enviada WHERE (([id_cancelacion] = @Original_id_cancelacion) AND ((@IsNull_Serie = 1 AND [Serie] IS NULL) OR ([Serie] = @Original_Serie)) AND ((@IsNull_Factura = 1 AND [Factura] IS NULL) OR ([Factura] = @Original_Factura)) AND ((@IsNull_Fecha = 1 AND [Fecha] IS NULL) OR ([Fecha] = @Original_Fecha)) AND ((@IsNull_Importe = 1 AND [Importe] IS NULL) OR ([Importe] = @Original_Importe)) AND ((@IsNull_Cancelacion = 1 AND [Cancelacion] IS NULL) OR ([Cancelacion] = @Original_Cancelacion)) AND ((@IsNull_NoCancelacion = 1 AND [NoCancelacion] IS NULL) OR ([NoCancelacion] = @Original_NoCancelacion)) AND ((@IsNull_Enviada = 1 AND [Enviada] IS NULL) OR ([Enviada] = @Original_Enviada)));
+SELECT id_cancelacion, Serie, Factura, Fecha, Importe, Cancelacion, NoCancelacion, Enviada FROM WEB_CancelacionesTotales WHERE (id_cancelacion = @id_cancelacion)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Cancelacion" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Cancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Enviada" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviada" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id_cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id_cancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Serie" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Fecha" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_Fecha" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Importe" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Importe" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Decimal" Direction="Input" ParameterName="@Original_Importe" Precision="12" ProviderType="Decimal" Scale="2" Size="0" SourceColumn="Importe" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Cancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Cancelacion" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Cancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Enviada" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Enviada" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Enviada" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviada" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="id_cancelacion" ColumnName="id_cancelacion" DataSourceName="WEB_Finagil.dbo.WEB_CancelacionesTotales" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@id_cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="id_cancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id_cancelacion" DataSetColumn="id_cancelacion" />
+              <Mapping SourceColumn="Serie" DataSetColumn="Serie" />
+              <Mapping SourceColumn="Factura" DataSetColumn="Factura" />
+              <Mapping SourceColumn="Fecha" DataSetColumn="Fecha" />
+              <Mapping SourceColumn="Importe" DataSetColumn="Importe" />
+              <Mapping SourceColumn="Cancelacion" DataSetColumn="Cancelacion" />
+              <Mapping SourceColumn="NoCancelacion" DataSetColumn="NoCancelacion" />
+              <Mapping SourceColumn="Enviada" DataSetColumn="Enviada" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="DeleteFecha" Modifier="Public" Name="DeleteFecha" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="DeleteFecha">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>DELETE FROM WEB_CancelacionesTotales
+WHERE        (Fecha &gt;= @FEcha)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="FEcha" ColumnName="Fecha" DataSourceName="WEB_Finagil.dbo.WEB_CancelacionesTotales" DataTypeServer="datetime" DbType="DateTime" Direction="Input" ParameterName="@FEcha" Precision="0" ProviderType="DateTime" Scale="0" Size="8" SourceColumn="Fecha" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+              </DbSource>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="ExisteCancelacion" Modifier="Public" Name="ExisteCancelacion" QueryType="Scalar" ScalarCallRetval="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="ExisteCancelacion">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        COUNT(*) AS Expr1
+FROM            WEB_CancelacionesTotales
+WHERE        (Serie = @Serie) AND (Factura = @Factura)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="Serie" ColumnName="Serie" DataSourceName="WEB_Finagil.dbo.WEB_CancelacionesTotales" DataTypeServer="varchar(3)" DbType="AnsiString" Direction="Input" ParameterName="@Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="3" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="Factura" ColumnName="Factura" DataSourceName="WEB_Finagil.dbo.WEB_CancelacionesTotales" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CancelacionesTableAdapter" GeneratorDataComponentClassName="CancelacionesTableAdapter" Name="Cancelaciones" UserDataComponentName="CancelacionesTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="WEB_Finagil.dbo.WEB_Cancelaciones" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [WEB_Cancelaciones] WHERE (([id_Cancelacion] = @Original_id_Cancelacion) AND ((@IsNull_Serie = 1 AND [Serie] IS NULL) OR ([Serie] = @Original_Serie)) AND ((@IsNull_NoCancelacion = 1 AND [NoCancelacion] IS NULL) OR ([NoCancelacion] = @Original_NoCancelacion)) AND ((@IsNull_Factura = 1 AND [Factura] IS NULL) OR ([Factura] = @Original_Factura)) AND ((@IsNull_Enviado = 1 AND [Enviado] IS NULL) OR ([Enviado] = @Original_Enviado)) AND ((@IsNull_FechaCancelacion = 1 AND [FechaCancelacion] IS NULL) OR ([FechaCancelacion] = @Original_FechaCancelacion)))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id_Cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id_Cancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Serie" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Enviado" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_FechaCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="FechaCancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_FechaCancelacion" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="FechaCancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [WEB_Cancelaciones] ([Serie], [NoCancelacion], [Factura], [Enviado], [FechaCancelacion]) VALUES (@Serie, @NoCancelacion, @Factura, @Enviado, @FechaCancelacion);
+SELECT id_Cancelacion, Serie, NoCancelacion, Factura, Enviado, FechaCancelacion FROM WEB_Cancelaciones WHERE (id_Cancelacion = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@FechaCancelacion" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="FechaCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        id_Cancelacion, Serie, NoCancelacion, Factura, Enviado, FechaCancelacion
+FROM            WEB_Cancelaciones</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [WEB_Cancelaciones] SET [Serie] = @Serie, [NoCancelacion] = @NoCancelacion, [Factura] = @Factura, [Enviado] = @Enviado, [FechaCancelacion] = @FechaCancelacion WHERE (([id_Cancelacion] = @Original_id_Cancelacion) AND ((@IsNull_Serie = 1 AND [Serie] IS NULL) OR ([Serie] = @Original_Serie)) AND ((@IsNull_NoCancelacion = 1 AND [NoCancelacion] IS NULL) OR ([NoCancelacion] = @Original_NoCancelacion)) AND ((@IsNull_Factura = 1 AND [Factura] IS NULL) OR ([Factura] = @Original_Factura)) AND ((@IsNull_Enviado = 1 AND [Enviado] IS NULL) OR ([Enviado] = @Original_Enviado)) AND ((@IsNull_FechaCancelacion = 1 AND [FechaCancelacion] IS NULL) OR ([FechaCancelacion] = @Original_FechaCancelacion)));
+SELECT id_Cancelacion, Serie, NoCancelacion, Factura, Enviado, FechaCancelacion FROM WEB_Cancelaciones WHERE (id_Cancelacion = @id_Cancelacion)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@FechaCancelacion" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="FechaCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id_Cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id_Cancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Serie" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_NoCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Factura" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_Factura" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="Factura" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_Enviado" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Boolean" Direction="Input" ParameterName="@Original_Enviado" Precision="0" ProviderType="Bit" Scale="0" Size="0" SourceColumn="Enviado" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_FechaCancelacion" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="FechaCancelacion" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_FechaCancelacion" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="FechaCancelacion" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="id_Cancelacion" ColumnName="id_Cancelacion" DataSourceName="WEB_Finagil.dbo.WEB_Cancelaciones" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@id_Cancelacion" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="id_Cancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id_Cancelacion" DataSetColumn="id_Cancelacion" />
+              <Mapping SourceColumn="Serie" DataSetColumn="Serie" />
+              <Mapping SourceColumn="NoCancelacion" DataSetColumn="NoCancelacion" />
+              <Mapping SourceColumn="Factura" DataSetColumn="Factura" />
+              <Mapping SourceColumn="Enviado" DataSetColumn="Enviado" />
+              <Mapping SourceColumn="FechaCancelacion" DataSetColumn="FechaCancelacion" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="ExisteCancelacion" Modifier="Public" Name="ExisteCancelacion" QueryType="Scalar" ScalarCallRetval="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="ExisteCancelacion">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        COUNT(*) AS Expr1
+FROM            WEB_Cancelaciones
+WHERE        (Serie = @Serie) AND (NoCancelacion = @Factura)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="Serie" ColumnName="Serie" DataSourceName="WEB_Finagil.dbo.WEB_Cancelaciones" DataTypeServer="varchar(3)" DbType="AnsiString" Direction="Input" ParameterName="@Serie" Precision="0" ProviderType="VarChar" Scale="0" Size="3" SourceColumn="Serie" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="Factura" ColumnName="NoCancelacion" DataSourceName="WEB_Finagil.dbo.WEB_Cancelaciones" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@Factura" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="NoCancelacion" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Factor100DS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="Factor100DS" msprop:Generator_UserDSName="Factor100DS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="FacturasConSaldo" msprop:Generator_UserTableName="FacturasConSaldo" msprop:Generator_RowEvArgName="FacturasConSaldoRowChangeEvent" msprop:Generator_TableVarName="tableFacturasConSaldo" msprop:Generator_TablePropName="FacturasConSaldo" msprop:Generator_RowDeletingName="FacturasConSaldoRowDeleting" msprop:Generator_RowChangingName="FacturasConSaldoRowChanging" msprop:Generator_RowDeletedName="FacturasConSaldoRowDeleted" msprop:Generator_RowEvHandlerName="FacturasConSaldoRowChangeEventHandler" msprop:Generator_TableClassName="FacturasConSaldoDataTable" msprop:Generator_RowChangedName="FacturasConSaldoRowChanged" msprop:Generator_RowClassName="FacturasConSaldoRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Factura" msprop:Generator_ColumnVarNameInTable="columnFactura" msprop:Generator_ColumnPropNameInRow="Factura" msprop:Generator_ColumnPropNameInTable="FacturaColumn" msprop:Generator_UserColumnName="Factura" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ImporteFactura" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnImporteFactura" msprop:Generator_ColumnPropNameInRow="ImporteFactura" msprop:Generator_ColumnPropNameInTable="ImporteFacturaColumn" msprop:Generator_UserColumnName="ImporteFactura" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ImportePago" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnImportePago" msprop:Generator_ColumnPropNameInRow="ImportePago" msprop:Generator_ColumnPropNameInTable="ImportePagoColumn" msprop:Generator_UserColumnName="ImportePago" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Pagos" msprop:Generator_UserTableName="Pagos" msprop:Generator_RowEvArgName="PagosRowChangeEvent" msprop:Generator_TableVarName="tablePagos" msprop:Generator_TablePropName="Pagos" msprop:Generator_RowDeletingName="PagosRowDeleting" msprop:Generator_RowChangingName="PagosRowChanging" msprop:Generator_RowDeletedName="PagosRowDeleted" msprop:Generator_RowEvHandlerName="PagosRowChangeEventHandler" msprop:Generator_TableClassName="PagosDataTable" msprop:Generator_RowChangedName="PagosRowChanged" msprop:Generator_RowClassName="PagosRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id_Pago" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnId_Pago" msprop:Generator_ColumnPropNameInRow="Id_Pago" msprop:Generator_ColumnPropNameInTable="Id_PagoColumn" msprop:Generator_UserColumnName="Id_Pago" type="xs:decimal" />
+              <xs:element name="Factura" msprop:Generator_ColumnVarNameInTable="columnFactura" msprop:Generator_ColumnPropNameInRow="Factura" msprop:Generator_ColumnPropNameInTable="FacturaColumn" msprop:Generator_UserColumnName="Factura" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Fecha" msprop:Generator_ColumnVarNameInTable="columnFecha" msprop:Generator_ColumnPropNameInRow="Fecha" msprop:Generator_ColumnPropNameInTable="FechaColumn" msprop:Generator_UserColumnName="Fecha" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Importe" msprop:Generator_ColumnVarNameInTable="columnImporte" msprop:Generator_ColumnPropNameInRow="Importe" msprop:Generator_ColumnPropNameInTable="ImporteColumn" msprop:Generator_UserColumnName="Importe" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Tipo" msprop:Generator_ColumnVarNameInTable="columnTipo" msprop:Generator_ColumnPropNameInRow="Tipo" msprop:Generator_ColumnPropNameInTable="TipoColumn" msprop:Generator_UserColumnName="Tipo" type="xs:int" minOccurs="0" />
+              <xs:element name="Linea" msprop:Generator_ColumnVarNameInTable="columnLinea" msprop:Generator_ColumnPropNameInRow="Linea" msprop:Generator_ColumnPropNameInTable="LineaColumn" msprop:Generator_UserColumnName="Linea" type="xs:int" minOccurs="0" />
+              <xs:element name="Descargado" msprop:Generator_ColumnVarNameInTable="columnDescargado" msprop:Generator_ColumnPropNameInRow="Descargado" msprop:Generator_ColumnPropNameInTable="DescargadoColumn" msprop:Generator_UserColumnName="Descargado" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Enviado" msprop:Generator_ColumnVarNameInTable="columnEnviado" msprop:Generator_ColumnPropNameInRow="Enviado" msprop:Generator_ColumnPropNameInTable="EnviadoColumn" msprop:Generator_UserColumnName="Enviado" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CancelacionesTotales" msprop:Generator_TableClassName="CancelacionesTotalesDataTable" msprop:Generator_TableVarName="tableCancelacionesTotales" msprop:Generator_TablePropName="CancelacionesTotales" msprop:Generator_RowDeletingName="CancelacionesTotalesRowDeleting" msprop:Generator_RowChangingName="CancelacionesTotalesRowChanging" msprop:Generator_RowEvHandlerName="CancelacionesTotalesRowChangeEventHandler" msprop:Generator_RowDeletedName="CancelacionesTotalesRowDeleted" msprop:Generator_UserTableName="CancelacionesTotales" msprop:Generator_RowChangedName="CancelacionesTotalesRowChanged" msprop:Generator_RowEvArgName="CancelacionesTotalesRowChangeEvent" msprop:Generator_RowClassName="CancelacionesTotalesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id_cancelacion" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid_cancelacion" msprop:Generator_ColumnPropNameInRow="id_cancelacion" msprop:Generator_ColumnPropNameInTable="id_cancelacionColumn" msprop:Generator_UserColumnName="id_cancelacion" type="xs:int" />
+              <xs:element name="Serie" msprop:Generator_ColumnVarNameInTable="columnSerie" msprop:Generator_ColumnPropNameInRow="Serie" msprop:Generator_ColumnPropNameInTable="SerieColumn" msprop:Generator_UserColumnName="Serie" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Factura" msprop:Generator_ColumnVarNameInTable="columnFactura" msprop:Generator_ColumnPropNameInRow="Factura" msprop:Generator_ColumnPropNameInTable="FacturaColumn" msprop:Generator_UserColumnName="Factura" type="xs:int" minOccurs="0" />
+              <xs:element name="Fecha" msprop:Generator_ColumnVarNameInTable="columnFecha" msprop:Generator_ColumnPropNameInRow="Fecha" msprop:Generator_ColumnPropNameInTable="FechaColumn" msprop:Generator_UserColumnName="Fecha" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Importe" msprop:Generator_ColumnVarNameInTable="columnImporte" msprop:Generator_ColumnPropNameInRow="Importe" msprop:Generator_ColumnPropNameInTable="ImporteColumn" msprop:Generator_UserColumnName="Importe" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Cancelacion" msprop:Generator_ColumnVarNameInTable="columnCancelacion" msprop:Generator_ColumnPropNameInRow="Cancelacion" msprop:Generator_ColumnPropNameInTable="CancelacionColumn" msprop:Generator_UserColumnName="Cancelacion" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NoCancelacion" msprop:Generator_ColumnVarNameInTable="columnNoCancelacion" msprop:Generator_ColumnPropNameInRow="NoCancelacion" msprop:Generator_ColumnPropNameInTable="NoCancelacionColumn" msprop:Generator_UserColumnName="NoCancelacion" type="xs:int" minOccurs="0" />
+              <xs:element name="Enviada" msprop:Generator_ColumnVarNameInTable="columnEnviada" msprop:Generator_ColumnPropNameInRow="Enviada" msprop:Generator_ColumnPropNameInTable="EnviadaColumn" msprop:Generator_UserColumnName="Enviada" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Cancelaciones" msprop:Generator_TableClassName="CancelacionesDataTable" msprop:Generator_TableVarName="tableCancelaciones" msprop:Generator_TablePropName="Cancelaciones" msprop:Generator_RowDeletingName="CancelacionesRowDeleting" msprop:Generator_RowChangingName="CancelacionesRowChanging" msprop:Generator_RowEvHandlerName="CancelacionesRowChangeEventHandler" msprop:Generator_RowDeletedName="CancelacionesRowDeleted" msprop:Generator_UserTableName="Cancelaciones" msprop:Generator_RowChangedName="CancelacionesRowChanged" msprop:Generator_RowEvArgName="CancelacionesRowChangeEvent" msprop:Generator_RowClassName="CancelacionesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id_Cancelacion" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid_Cancelacion" msprop:Generator_ColumnPropNameInRow="id_Cancelacion" msprop:Generator_ColumnPropNameInTable="id_CancelacionColumn" msprop:Generator_UserColumnName="id_Cancelacion" type="xs:int" />
+              <xs:element name="Serie" msprop:Generator_ColumnVarNameInTable="columnSerie" msprop:Generator_ColumnPropNameInRow="Serie" msprop:Generator_ColumnPropNameInTable="SerieColumn" msprop:Generator_UserColumnName="Serie" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NoCancelacion" msprop:Generator_ColumnVarNameInTable="columnNoCancelacion" msprop:Generator_ColumnPropNameInRow="NoCancelacion" msprop:Generator_ColumnPropNameInTable="NoCancelacionColumn" msprop:Generator_UserColumnName="NoCancelacion" type="xs:int" minOccurs="0" />
+              <xs:element name="Factura" msprop:Generator_ColumnVarNameInTable="columnFactura" msprop:Generator_ColumnPropNameInRow="Factura" msprop:Generator_ColumnPropNameInTable="FacturaColumn" msprop:Generator_UserColumnName="Factura" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="15" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Enviado" msprop:Generator_ColumnVarNameInTable="columnEnviado" msprop:Generator_ColumnPropNameInRow="Enviado" msprop:Generator_ColumnPropNameInTable="EnviadoColumn" msprop:Generator_UserColumnName="Enviado" type="xs:boolean" minOccurs="0" />
+              <xs:element name="FechaCancelacion" msprop:Generator_ColumnVarNameInTable="columnFechaCancelacion" msprop:Generator_ColumnPropNameInRow="FechaCancelacion" msprop:Generator_ColumnPropNameInTable="FechaCancelacionColumn" msprop:Generator_UserColumnName="FechaCancelacion" type="xs:dateTime" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Pagos" />
+      <xs:field xpath="mstns:Id_Pago" />
+    </xs:unique>
+    <xs:unique name="CancelacionesTotales_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:CancelacionesTotales" />
+      <xs:field xpath="mstns:id_cancelacion" />
+    </xs:unique>
+    <xs:unique name="Cancelaciones_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Cancelaciones" />
+      <xs:field xpath="mstns:id_Cancelacion" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
