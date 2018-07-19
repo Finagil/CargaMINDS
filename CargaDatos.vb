@@ -581,7 +581,7 @@ Module CargaDatos
 
             With cm1
                 .CommandType = CommandType.Text
-                .CommandText = "SELECT cliente, Anexo, Fechacon, Mensu, MtoFin, Tipar, Sucursal FROM Minds_Cuentas "
+                .CommandText = "SELECT cliente, Anexo, Fechacon, Mensu, MtoFin, Tipar, Sucursal, LiquidezInmediata FROM Minds_Cuentas "
                 .Connection = cnAgil
             End With
 
@@ -669,7 +669,11 @@ Module CargaDatos
                     Case "S"
                         ' cProduct = "CREDITO"
                         ' cSubProduct = "SIMPLE"
-                        cProduct = "3"
+                        If drAnexo("LiquidezInmediata") = True Then
+                            cProduct = "11"
+                        Else
+                            cProduct = "3"
+                        End If
                 End Select
                 nCount = 0
                 nPago = 0
@@ -691,7 +695,7 @@ Module CargaDatos
                     Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago)
                 Else
                     'Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
-                    Cuentas.UpdateMensualidad(cPago, cAnexo)
+                    Cuentas.UpdateMensualidad(cPago, cAnexo, cProduct)
                 End If
 
             Next
