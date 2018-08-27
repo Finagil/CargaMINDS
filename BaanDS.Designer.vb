@@ -5809,7 +5809,7 @@ Namespace BaanDSTableAdapters
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")>  _
         Private Sub InitCommandCollection()
-            Me._commandCollection = New Global.System.Data.Odbc.OdbcCommand(0) {}
+            Me._commandCollection = New Global.System.Data.Odbc.OdbcCommand(1) {}
             Me._commandCollection(0) = New Global.System.Data.Odbc.OdbcCommand()
             Me._commandCollection(0).Connection = Me.Connection
             Me._commandCollection(0).CommandText = "SELECT     t_ttyp AS Serie, t_ninv AS Factura, t_lino AS Linea, t_docd AS Fecha, "& _ 
@@ -5819,6 +5819,15 @@ Namespace BaanDSTableAdapters
             Me._commandCollection(0).CommandType = Global.System.Data.CommandType.Text
             Me._commandCollection(0).Parameters.Add(New Global.System.Data.Odbc.OdbcParameter("t_ttyp", Global.System.Data.Odbc.OdbcType.[Char], 1024, Global.System.Data.ParameterDirection.Input, CType(0,Byte), CType(0,Byte), "Serie", Global.System.Data.DataRowVersion.Current, false, Nothing))
             Me._commandCollection(0).Parameters.Add(New Global.System.Data.Odbc.OdbcParameter("t_ninv", Global.System.Data.Odbc.OdbcType.Int, 0, Global.System.Data.ParameterDirection.Input, CType(0,Byte), CType(0,Byte), "Factura", Global.System.Data.DataRowVersion.Current, false, Nothing))
+            Me._commandCollection(1) = New Global.System.Data.Odbc.OdbcCommand()
+            Me._commandCollection(1).Connection = Me.Connection
+            Me._commandCollection(1).CommandText = "SELECT     t_ttyp AS Serie, t_ninv AS Factura, t_lino AS Linea, t_docd AS Fecha, "& _ 
+                "t_trec AS Tipo, t_amnt AS Importe, t_docn, t_line, t_tdoc"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"FROM         baandb.t"& _ 
+                "tfacr200200"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"WHERE     (t_ttyp = ?) AND (t_ninv = ?) AND (t_trec = 4)"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"ORDER BY "& _ 
+                "Serie, Factura, Linea"
+            Me._commandCollection(1).CommandType = Global.System.Data.CommandType.Text
+            Me._commandCollection(1).Parameters.Add(New Global.System.Data.Odbc.OdbcParameter("t_ttyp", Global.System.Data.Odbc.OdbcType.VarChar, 1024, Global.System.Data.ParameterDirection.Input, CType(0,Byte), CType(0,Byte), "Serie", Global.System.Data.DataRowVersion.Current, false, Nothing))
+            Me._commandCollection(1).Parameters.Add(New Global.System.Data.Odbc.OdbcParameter("t_ninv", Global.System.Data.Odbc.OdbcType.Int, 0, Global.System.Data.ParameterDirection.Input, CType(0,Byte), CType(0,Byte), "Factura", Global.System.Data.DataRowVersion.Current, false, Nothing))
         End Sub
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -5846,6 +5855,42 @@ Namespace BaanDSTableAdapters
          Global.System.ComponentModel.DataObjectMethodAttribute(Global.System.ComponentModel.DataObjectMethodType.[Select], true)>  _
         Public Overloads Overridable Function GetData(ByVal t_ttyp As String, ByVal t_ninv As Integer) As BaanDS.PagosBaanDataTable
             Me.Adapter.SelectCommand = Me.CommandCollection(0)
+            If (t_ttyp Is Nothing) Then
+                Throw New Global.System.ArgumentNullException("t_ttyp")
+            Else
+                Me.Adapter.SelectCommand.Parameters(0).Value = CType(t_ttyp,String)
+            End If
+            Me.Adapter.SelectCommand.Parameters(1).Value = CType(t_ninv,Integer)
+            Dim dataTable As BaanDS.PagosBaanDataTable = New BaanDS.PagosBaanDataTable()
+            Me.Adapter.Fill(dataTable)
+            Return dataTable
+        End Function
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0"),  _
+         Global.System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter"),  _
+         Global.System.ComponentModel.DataObjectMethodAttribute(Global.System.ComponentModel.DataObjectMethodType.Fill, false)>  _
+        Public Overloads Overridable Function FillByANC(ByVal dataTable As BaanDS.PagosBaanDataTable, ByVal t_ttyp As String, ByVal t_ninv As Integer) As Integer
+            Me.Adapter.SelectCommand = Me.CommandCollection(1)
+            If (t_ttyp Is Nothing) Then
+                Throw New Global.System.ArgumentNullException("t_ttyp")
+            Else
+                Me.Adapter.SelectCommand.Parameters(0).Value = CType(t_ttyp,String)
+            End If
+            Me.Adapter.SelectCommand.Parameters(1).Value = CType(t_ninv,Integer)
+            If (Me.ClearBeforeFill = true) Then
+                dataTable.Clear
+            End If
+            Dim returnValue As Integer = Me.Adapter.Fill(dataTable)
+            Return returnValue
+        End Function
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0"),  _
+         Global.System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter"),  _
+         Global.System.ComponentModel.DataObjectMethodAttribute(Global.System.ComponentModel.DataObjectMethodType.[Select], false)>  _
+        Public Overloads Overridable Function GetDataByANC(ByVal t_ttyp As String, ByVal t_ninv As Integer) As BaanDS.PagosBaanDataTable
+            Me.Adapter.SelectCommand = Me.CommandCollection(1)
             If (t_ttyp Is Nothing) Then
                 Throw New Global.System.ArgumentNullException("t_ttyp")
             Else

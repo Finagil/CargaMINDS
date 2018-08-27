@@ -31,7 +31,24 @@ ORDER BY WEB_Facturas.Factura</CommandText>
               <Mapping SourceColumn="ImporteFactura" DataSetColumn="ImporteFactura" />
               <Mapping SourceColumn="ImportePago" DataSetColumn="ImportePago" />
             </Mappings>
-            <Sources />
+            <Sources>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="WEB_Finagil.dbo.WEB_Facturas" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="FillBy90" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy90" GeneratorSourceName="FillBy90" GetMethodModifier="Public" GetMethodName="GetDataBy90" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy90" UserSourceName="FillBy90">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        WEB_Facturas.Factura, MAX(WEB_Facturas.ImporteFactura) AS ImporteFactura, SUM(ISNULL(WEB_Pagos.Importe, 0)) AS ImportePago
+FROM            WEB_Facturas LEFT OUTER JOIN
+                         WEB_Pagos ON WEB_Facturas.Factura = WEB_Pagos.Factura
+WHERE        (WEB_Facturas.Estatus = 'Descontada') AND (WEB_Pagos.Tipo = 2 OR
+                         WEB_Pagos.Tipo = 4 OR
+                         WEB_Pagos.Tipo IS NULL) AND (CONVERT(decimal, GETDATE() - WEB_Facturas.FechaFactura) &gt;= 90)
+GROUP BY WEB_Facturas.Factura
+HAVING        (SUM(ISNULL(WEB_Pagos.Importe, 0)) &lt;= 0)
+ORDER BY WEB_Facturas.Factura</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PagosTableAdapter" GeneratorDataComponentClassName="PagosTableAdapter" Name="Pagos" UserDataComponentName="PagosTableAdapter">
             <MainSource>
@@ -348,6 +365,14 @@ WHERE        (Serie = @Serie) AND (NoCancelacion = @Factura)</CommandText>
                     </Parameters>
                   </DbCommand>
                 </SelectCommand>
+              </DbSource>
+              <DbSource ConnectionRef="server-raid.Factor100.dbo" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="QuitaGuiones" Modifier="Public" Name="QuitaGuiones" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="QuitaGuiones">
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>UPDATE [dbo].[WEB_Cancelaciones] SET FACTURA = REPLACE(FACTURA,'-','') WHERE        (Enviado = 0) AND (Factura LIKE '%-%')</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </UpdateCommand>
               </DbSource>
             </Sources>
           </TableAdapter>

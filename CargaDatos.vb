@@ -18,7 +18,11 @@ Module CargaDatos
         'Console.WriteLine("Cargando pagos de Clientes Factoraje...")
         Carga_FactorajeCliente()
         'Console.WriteLine("Cargando pagos de Factoraje a Finagil...")
+        Carga_FactorajeANC()
         Carga_FactorajePALM()
+
+
+
         Console.WriteLine("Terminado")
     End Sub
 
@@ -808,9 +812,6 @@ Module CargaDatos
         Dim tBaan As New BaanDSTableAdapters.PagosBaanTableAdapter
         Dim fac As BaanDS.PagosPALMFinagilRow
 
-        'Dim Serie As String
-        'Dim Factura As Decimal
-
         ''tPAGOS.Fill(tPAG, Date.Now.AddDays(-40)) ' se quito por que ahora se va a la sigenrecia de pago!!!
         For Each fac In tPAG.Rows
             'Serie = Mid(fac.factura, 1, 3)
@@ -837,7 +838,7 @@ Module CargaDatos
         Dim tBaan2 As New BaanDSTableAdapters.SugerenciaBaanTableAdapter
         Dim fac2 As BaanDS.SugerenciaBaanRow
 
-        tPAGOS2.Fill(tPAG2, Date.Now.AddDays(-16))
+        tPAGOS2.Fill(tPAG2, Date.Now.AddDays(-30))
         For Each fac2 In tPAG2.Rows
             'Serie = Mid(fac.factura, 1, 3)
             'Factura = Mid(fac.factura, 4, 10)
@@ -860,7 +861,7 @@ Module CargaDatos
             End If
         Next
 
-        Dim diasMenos As Integer = (-108)
+        Dim diasMenos As Integer = (-365)
         Dim ta As New Factor100DSTableAdapters.CancelacionesTableAdapter
 
 
@@ -907,6 +908,7 @@ Module CargaDatos
                 ta.Insert(Can209.t_ttyp, Can209.t_invn, Can209.t_refb.Substring(0, 14), False, Can209.t_odat)
             End If
         Next
+
         Dim tCancel206 As New BaanDSTableAdapters.Cancelaciones206TableAdapter
         Dim tCAN206 As New BaanDS.Cancelaciones206DataTable
         Dim tBaan206 As New BaanDSTableAdapters.Cancelaciones206TableAdapter
@@ -928,6 +930,32 @@ Module CargaDatos
                 ta.Insert(Can207.t_ttyp, Can207.t_invn, Can207.t_refb.Substring(0, 14), False, Can207.t_odat)
             End If
         Next
+        ta.QuitaGuiones()
     End Sub
 
+    Sub Carga_FactorajeANC()
+        Dim tSaldos As New Factor100DSTableAdapters.FacturasConSaldoTableAdapter
+        Dim tSal As New Factor100DS.FacturasConSaldoDataTable
+        Dim tCancel As New Factor100DSTableAdapters.CancelacionesTableAdapter
+        Dim tBaan As New BaanDSTableAdapters.PagosBaanTableAdapter
+        Dim tBaa As New BaanDS.PagosBaanDataTable
+        Dim fac As Factor100DS.FacturasConSaldoRow
+        Dim pag As BaanDS.PagosBaanRow
+        Dim Serie As String
+        Dim Factura As Decimal
+
+        tSaldos.FillBy90(tSal)
+        For Each fac In tSal.Rows
+            Serie = Mid(fac.Factura, 1, 3)
+            Factura = Mid(fac.Factura, 4, 10)
+            tBaan.FillByANC(tBaa, Serie, Factura)
+            For Each pag In tBaa.Rows
+                If tCancel.ExisteCancelacion(pag.serie, pag.factura) <= 0 And pag.t_tdoc = "ANC" Then
+                    tCancel.Insert(pag.serie, pag.factura, Serie.Trim & Factura, False, pag.fecha)
+                End If
+            Next
+        Next
+
+
+    End Sub
 End Module
