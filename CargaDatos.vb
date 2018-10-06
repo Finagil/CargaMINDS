@@ -2,7 +2,7 @@ Imports System.Data.SqlClient
 Imports System.Net.Mail
 Module CargaDatos
     Dim strConn As String = "Server=SERVER-RAID; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
-    Dim strConn2 As String = "Server=SERVER-MINDS\TEST_MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil"
+    Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil"
 
     Sub Main()
         Console.WriteLine("Cargando promotores ...")
@@ -682,14 +682,14 @@ Module CargaDatos
                 nCount = 0
                 nPago = 0
                 For Each drDato In drEdoctav
-                    If nCount = 0 Then
+                    'If nCount = 0 Then
+                    '    cFechafin = CTOD(drDato("Feven")).ToShortDateString
+                    '    nPago = drDato("Abcap") + drDato("Inter") + drDato("iva") + drDato("ivaCapital")
+                    '    nCount += 1
+                    'End If
+                    If Mid(drDato("Feven"), 1, 6) = Date.Now.AddMonths(-1).ToString("yyyyMM") Then
                         cFechafin = CTOD(drDato("Feven")).ToShortDateString
-                        nPago = drDato("Abcap") + drDato("Inter") + drDato("iva") + drDato("ivaCapital")
-                        nCount += 1
-                    End If
-                    If drDato("NuFact") <> 0 Then
-                        cFechafin = CTOD(drDato("Feven")).ToShortDateString
-                        nPago = drDato("Abcap") + drDato("Inter") + drDato("iva") + drDato("ivaCapital")
+                        nPago += drDato("Abcap") + drDato("Inter") + drDato("iva") + drDato("ivaCapital")
                     End If
                 Next
                 cPago = nPago.ToString
@@ -699,7 +699,7 @@ Module CargaDatos
                     Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago)
                 Else
                     'Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
-                    Cuentas.UpdateMensualidad(cPago, cAnexo, cProduct)
+                    Cuentas.UpdateMensualidad(cPago, cProduct, cAnexo)
                 End If
 
             Next
