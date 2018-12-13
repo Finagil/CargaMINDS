@@ -526,8 +526,12 @@ Module CargaDatos
             strUpdate = strUpdate & ", Correo = '" & drDato("EMail1") & "'"
             strUpdate = strUpdate & ", Telefono = '" & drDato("Telef1") & "'"
             strUpdate = strUpdate & " WHERE nic = '" & drDato("Cliente") & "'"
-            cm2 = New SqlCommand(strUpdate, cnAgil1)
-            cm2.ExecuteNonQuery()
+            Try
+                cm2 = New SqlCommand(strUpdate, cnAgil1)
+                cm2.ExecuteNonQuery()
+            Catch ex As Exception
+                Console.WriteLine(ex.Message)
+            End Try
             If nIdEdoNAC > 0 Then
                 strUpdate = "UPDATE layoutsKYC SET id_estadoNacimiento = " & nIdEdoNAC & "  WHERE nic = '" & drDato("Cliente") & "'"
                 cm2 = New SqlCommand(strUpdate, cnAgil1)
