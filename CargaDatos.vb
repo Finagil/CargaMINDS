@@ -41,7 +41,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("ecacerest@lamoderna.com.mx", ex.Message, "error en PROMOTORES")
+            EnviaError("viapolo@lamoderna.com.mx", ex.Message, "error en PROMOTORES")
         End Try
     End Sub
 
@@ -103,7 +103,7 @@ Module CargaDatos
 
         Try
 
-        
+
 
             cDia = Mid(DTOC(Today), 7, 2) & Mid(DTOC(Today), 5, 2)
             'cFecha = dtpProcesar.Value
@@ -130,7 +130,7 @@ Module CargaDatos
 
             With cm2
                 .CommandType = CommandType.Text
-                .CommandText = "select Anexo, Fechacon, Flcan, Cliente FROM Anexos " & _
+                .CommandText = "select Anexo, Fechacon, Flcan, Cliente FROM Anexos " &
                 "UNION Select Anexo, FechaAutorizacion as Fechacon, Flcan, Cliente FROM Avios ORDER BY Cliente"
                 '"UNION Select Anexo, FechaAutorizacion as Fechacon, Flcan, Cliente FROM Avios where cliente = '05869' ORDER BY Cliente"
 
@@ -420,7 +420,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("ecacerest@lamoderna.com.mx", ex.Message, "error en cLIENTES")
+            EnviaError("viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
         End Try
 
         cnAgil.Close()
@@ -750,7 +750,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("ecacerest@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
+            EnviaError("viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
         End Try
         cnAgil.Close()
     End Sub
