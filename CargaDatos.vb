@@ -41,7 +41,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("viapolo@lamoderna.com.mx", ex.Message, "error en PROMOTORES")
+            EnviaError("viapolo@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en PROMOTORES")
         End Try
     End Sub
 
@@ -420,7 +420,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
+            EnviaError("viapolo@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
         End Try
 
         cnAgil.Close()
@@ -674,6 +674,10 @@ Module CargaDatos
                         'cProduct = "CREDITO"
                         'cSubProduct = "REFACCIONARIO"
                         cProduct = "8"
+                    Case "L"
+                        'cProduct = "CREDITO"
+                        'cSubProduct = "REFACCIONARIO"
+                        cProduct = "11"
                     Case "S"
                         ' cProduct = "CREDITO"
                         ' cSubProduct = "SIMPLE"
@@ -750,7 +754,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
+            EnviaError("viapolo@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
         End Try
         cnAgil.Close()
     End Sub
