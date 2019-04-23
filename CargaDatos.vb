@@ -1,7 +1,7 @@
 Imports System.Data.SqlClient
 Imports System.Net.Mail
 Module CargaDatos
-    Dim strConn As String = "Server=SERVER-RAID; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
+    Dim strConn As String = "Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
     Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil"
 
     Sub Main()
@@ -809,8 +809,6 @@ Module CargaDatos
                 End If
             Next
         Next
-
-
     End Sub
 
     Sub Carga_FactorajePALM()
