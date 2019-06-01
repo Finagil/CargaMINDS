@@ -565,7 +565,6 @@ Module CargaDatos
         Dim cCliente As String
         Dim cFecha As String
         Dim cFechafin As String
-        Dim cPago As String
         Dim nCount As Integer
         Dim nPago As Decimal
         Dim cProduct As String
@@ -625,37 +624,13 @@ Module CargaDatos
             daEdoctav.Fill(dsAgil, "Edoctav")
             daAvios.Fill(dsAgil, "Avios")
 
-            '' ''daCuentasConcetradoras.Fill(dsAgil, "Cuentas") 'SE QUITO A SOLICUTUD DE KARLA SANCCHEZ
-            '' ''CONCETRADORAS+++++++++++++++++++++++++++++++++++++
-            ' ''For Each drAnexo In dsAgil.Tables("Cuentas").Rows
-            ' ''    cAnexo = drAnexo("Anexo")
-            ' ''    cCliente = drAnexo("Cliente")
-            ' ''    cSucursal = drAnexo("Mensu").ToString
-            ' ''    cImporte = drAnexo("MtoFin").ToString
-            ' ''    cFecha = CTOD(drAnexo("Fechacon")).ToShortDateString
-
-            ' ''    nCount = 0
-            ' ''    ' cProduct = "CREDITO"
-            ' ''    ' cSubProduct = "SIMPLE"
-            ' ''    cProduct = "3"
-
-            ' ''    cFechafin = "01/01/2030"
-            ' ''    cPago = 1
-
-            ' ''    If Cuentas.Existe(cAnexo).Value = 0 Then
-            ' ''        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago)
-            ' ''    End If
-            ' ''Next
-            '' ''CONCETRADORAS+++++++++++++++++++++++++++++++++++++
-
-            ' Establecer la relación entre Anexos y Edoctav
-
             relAnexoEdoctav = New DataRelation("AnexoEdoctav", dsAgil.Tables("Anexos").Columns("Anexo"), dsAgil.Tables("Edoctav").Columns("Anexo"))
             dsAgil.EnforceConstraints = False
             dsAgil.Relations.Add(relAnexoEdoctav)
 
             For Each drAnexo In dsAgil.Tables("Anexos").Rows
                 cAnexo = drAnexo("Anexo")
+                nPago = CDec(drAnexo("PLD_MontoMensual") * 3) ' solicitado por KArla Sanchez 31/05/2019
                 cCliente = drAnexo("Cliente")
                 cSucursal = drAnexo("Mensu").ToString
                 cImporte = drAnexo("MtoFin").ToString
@@ -688,26 +663,13 @@ Module CargaDatos
                         End If
                 End Select
                 nCount = 0
-                nPago = 0
-                For Each drDato In drEdoctav
-                    'If nCount = 0 Then
-                    '    cFechafin = CTOD(drDato("Feven")).ToShortDateString
-                    '    nPago = drDato("Abcap") + drDato("Inter") + drDato("iva") + drDato("ivaCapital")
-                    '    nCount += 1
-                    'End If
-                    If Mid(drDato("Feven"), 1, 6) = Date.Now.AddMonths(-1).ToString("yyyyMM") Then
-                        cFechafin = CTOD(drDato("Feven")).ToShortDateString
-                        nPago += drDato("Abcap") + drDato("Inter") + drDato("iva") + drDato("ivaCapital")
-                    End If
-                Next
-                cPago = nPago.ToString
 
-                cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & cPago & "|" & cSucursal & "|"
+                cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & nPago.ToString & "|" & cSucursal & "|"
                 If Cuentas.Existe(cAnexo).Value = 0 Then
-                    Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago)
+                    Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString)
                 Else
                     'Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
-                    Cuentas.UpdateMensualidad(cPago, cProduct, cAnexo)
+                    Cuentas.UpdateMensualidad(nPago.ToString, cProduct, cAnexo)
                 End If
 
             Next
@@ -738,14 +700,13 @@ Module CargaDatos
                         cProduct = "9"
                 End Select
                 cFechafin = CTOD(drAnexo("FechaTerminacion")).ToShortDateString
-                nPago = drAnexo("LineaActual")
-                cPago = nPago.ToString
+                nPago = drAnexo("PLD_MontoMensual") * 3 ' solicitado por KArla Sanchez 31/05/2019
 
                 If drAnexo("Tipar") <> "AA" Then
                     If Cuentas.Existe(cAnexo).Value = 0 Then
-                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago)
+                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString)
                     Else
-                        Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
+                        Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString, cAnexo)
                     End If
 
                     cAnexo = Mid(cAnexo, 1, 9)
