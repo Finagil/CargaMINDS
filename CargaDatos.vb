@@ -41,7 +41,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("viapolo@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en PROMOTORES")
+            EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en PROMOTORES")
         End Try
     End Sub
 
@@ -420,7 +420,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("viapolo@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
+            EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
         End Try
 
         cnAgil.Close()
@@ -531,6 +531,7 @@ Module CargaDatos
                 cm2.ExecuteNonQuery()
             Catch ex As Exception
                 Console.WriteLine(ex.Message)
+                EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
             End Try
             If nIdEdoNAC > 0 Then
                 strUpdate = "UPDATE layoutsKYC SET id_estadoNacimiento = " & nIdEdoNAC & "  WHERE nic = '" & drDato("Cliente") & "'"
@@ -588,7 +589,7 @@ Module CargaDatos
 
             With cm1
                 .CommandType = CommandType.Text
-                .CommandText = "SELECT cliente, Anexo, Fechacon, Mensu, MtoFin, Tipar, Sucursal, LiquidezInmediata FROM Minds_Cuentas "
+                .CommandText = "SELECT cliente, Anexo, Fechacon, Mensu, MtoFin, Tipar, Sucursal, LiquidezInmediata, PLD_MontoMensual FROM Minds_Cuentas "
                 .Connection = cnAgil
             End With
 
@@ -663,15 +664,17 @@ Module CargaDatos
                         End If
                 End Select
                 nCount = 0
-
-                cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & nPago.ToString & "|" & cSucursal & "|"
-                If Cuentas.Existe(cAnexo).Value = 0 Then
-                    Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString)
-                Else
-                    'Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
-                    Cuentas.UpdateMensualidad(nPago.ToString, cProduct, cAnexo)
-                End If
-
+                Try
+                    cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & nPago.ToString & "|" & cSucursal & "|"
+                    If Cuentas.Existe(cAnexo).Value = 0 Then
+                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString)
+                    Else
+                        'Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
+                        Cuentas.UpdateMensualidad(nPago.ToString, cProduct, cAnexo)
+                    End If
+                Catch ex As Exception
+                    EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
+                End Try
             Next
 
 
@@ -715,7 +718,7 @@ Module CargaDatos
                 End If
             Next
         Catch ex As Exception
-            EnviaError("viapolo@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
+            EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
         End Try
         cnAgil.Close()
     End Sub
