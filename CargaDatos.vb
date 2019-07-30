@@ -565,11 +565,11 @@ Module CargaDatos
         Dim cCiclo As String
         Dim cCliente As String
         Dim cFecha As String
-        Dim cFechafin As String
         Dim nCount As Integer
         Dim nPago As Decimal
         Dim cProduct As String
         Dim cSucursal As String
+        Dim ID_Frecuencia As Integer
 
 
         Dim cm2 As New SqlCommand()
@@ -589,7 +589,7 @@ Module CargaDatos
 
             With cm1
                 .CommandType = CommandType.Text
-                .CommandText = "SELECT cliente, Anexo, Fechacon, Mensu, MtoFin, Tipar, Sucursal, LiquidezInmediata, PLD_MontoMensual FROM Minds_Cuentas "
+                .CommandText = "SELECT * FROM Minds_Cuentas "
                 .Connection = cnAgil
             End With
 
@@ -637,6 +637,24 @@ Module CargaDatos
                 cImporte = drAnexo("MtoFin").ToString
                 cFecha = CTOD(drAnexo("Fechacon")).ToShortDateString
                 drEdoctav = drAnexo.GetChildRows("AnexoEdoctav")
+                Select Case UCase(drAnexo("Vencimiento"))
+                    Case "SEMANAL"
+                        ID_Frecuencia = 1
+                    Case "CATORCENAL"
+                        ID_Frecuencia = 2
+                    Case "QUINCENAL"
+                        ID_Frecuencia = 3
+                    Case "MENSUAL"
+                        ID_Frecuencia = 4
+                    Case "BIMESTRAL"
+                        ID_Frecuencia = 5
+                    Case "TRIMESTRAL"
+                        ID_Frecuencia = 6
+                    Case "SEMESTRAL"
+                        ID_Frecuencia = 7
+                    Case "ANUAL"
+                        ID_Frecuencia = 8
+                End Select
                 Select Case drAnexo("Tipar")
                     Case "F"
                         '    cProduct = "ARRENDAMIENTO"
@@ -665,11 +683,11 @@ Module CargaDatos
                 End Select
                 nCount = 0
                 Try
-                    cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & nPago.ToString & "|" & cSucursal & "|"
+                    'cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & nPago.ToString & "|" & cSucursal & "|"
                     If Cuentas.Existe(cAnexo).Value = 0 Then
-                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString)
+                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia)
                     Else
-                        'Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, cPago, cAnexo)
+                        Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia, cAnexo)
                         Cuentas.UpdateMensualidad(nPago.ToString, cProduct, cAnexo)
                     End If
                 Catch ex As Exception
@@ -702,14 +720,33 @@ Module CargaDatos
                         ' cSubProduct = "AVIO"
                         cProduct = "9"
                 End Select
-                cFechafin = CTOD(drAnexo("FechaTerminacion")).ToShortDateString
+                Select Case UCase(drAnexo("Vencimiento"))
+                    Case "SEMANAL"
+                        ID_Frecuencia = 1
+                    Case "CATORCENAL"
+                        ID_Frecuencia = 2
+                    Case "QUINCENAL"
+                        ID_Frecuencia = 3
+                    Case "MENSUAL"
+                        ID_Frecuencia = 4
+                    Case "BIMESTRAL"
+                        ID_Frecuencia = 5
+                    Case "TRIMESTRAL"
+                        ID_Frecuencia = 6
+                    Case "SEMESTRAL"
+                        ID_Frecuencia = 7
+                    Case "ANUAL"
+                        ID_Frecuencia = 8
+                End Select
+
+                'cFechafin = CTOD(drAnexo("FechaTerminacion")).ToShortDateString
                 nPago = drAnexo("PLD_MontoMensual") * 3 ' solicitado por KArla Sanchez 31/05/2019
 
                 If drAnexo("Tipar") <> "AA" Then
                     If Cuentas.Existe(cAnexo).Value = 0 Then
-                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString)
+                        Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia)
                     Else
-                        Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, cFechafin, 1, nPago.ToString, cAnexo)
+                        Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia, cAnexo)
                     End If
 
                     cAnexo = Mid(cAnexo, 1, 9)
