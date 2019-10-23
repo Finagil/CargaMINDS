@@ -2,7 +2,7 @@ Imports System.Data.SqlClient
 Imports System.Net.Mail
 Module CargaDatos
     Dim strConn As String = "Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
-    Dim strConn2 As String = "Server=SERVER-MINDS\test_MINDS; DataBase=PrevencionLavadoDinero_Finagil; User ID=finagil; pwd=finagil"
+    Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero_Finagil; User ID=finagil; pwd=finagil"
 
     Sub Main()
         Console.WriteLine("Cargando promotores ...")
@@ -508,7 +508,7 @@ Module CargaDatos
 
             cNext = IIf(Trim(drDato("PLD_Numext")) = "", "0", drDato("PLD_Numext"))
             cNint = IIf(Trim(drDato("PLD_Numint")) = "", "0", drDato("PLD_Numint"))
-            cNac = IIf(Trim(drDato("Nacionalidad")) = "", " ", IIf(Trim(drDato("Nacionalidad")) = "MEXICANA", 1, 2))
+            cNac = IIf(Trim(drDato("Nacionalidad")) = "", 1, IIf(Trim(drDato("Nacionalidad")) = "MEXICANA", 1, 2))
             strUpdate = "UPDATE layoutsKYC SET DirNo = '" & cNext & "'"
             strUpdate = strUpdate & ", Interior = '" & cNint & "'"
             strUpdate = strUpdate & ", IdNacionalidad = '" & cNac & "'"

@@ -57,8 +57,8 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Provider=SQLOLEDB;Data Source=SERVER-MINDS\test_MINDS;Persist Security Info=True;"& _ 
-            "Password=finagil;User ID=finagil;Initial Catalog=PrevencionLavadoDinero_Finagil")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Provider=SQLOLEDB;Data Source=SERVER-MINDS\MINDS;Persist Security Info=True;Passw"& _ 
+            "ord=finagil;User ID=finagil;Initial Catalog=PrevencionLavadoDinero_Finagil")>  _
         Public ReadOnly Property ConnectionString() As String
             Get
                 Return CType(Me("ConnectionString"),String)
