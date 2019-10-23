@@ -2,7 +2,7 @@ Imports System.Data.SqlClient
 Imports System.Net.Mail
 Module CargaDatos
     Dim strConn As String = "Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
-    Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero_Finagil; User ID=finagil; pwd=finagil"
+    Dim strConn2 As String = "Server=SERVER-MINDS\test_MINDS; DataBase=PrevencionLavadoDinero_Finagil; User ID=finagil; pwd=finagil"
 
     Sub Main()
         Console.WriteLine("Cargando promotores ...")
@@ -470,7 +470,7 @@ Module CargaDatos
 
         With cm3
             .CommandType = CommandType.Text
-            .CommandText = "SELECT Cat_Estado.* FROM [PrevencionLavadoDinero].[dbo].[Cat_Estado]"
+            .CommandText = "SELECT Cat_Estado.* FROM [PrevencionLavadoDinero_Finagil].[dbo].[Cat_Estado]"
             .Connection = cnAgil1
         End With
         daEstado.Fill(dsAgil, "Estados")
@@ -648,7 +648,7 @@ Module CargaDatos
                         ID_Frecuencia = 4
                     Case "BIMESTRAL"
                         ID_Frecuencia = 5
-                    Case "TRIMESTRAL"
+                    Case "TRIMESTRAL", "TRIMESTRE"
                         ID_Frecuencia = 6
                     Case "SEMESTRAL"
                         ID_Frecuencia = 7
@@ -731,7 +731,7 @@ Module CargaDatos
                         ID_Frecuencia = 4
                     Case "BIMESTRAL"
                         ID_Frecuencia = 5
-                    Case "TRIMESTRAL"
+                    Case "TRIMESTRAL", "TRIMESTRE"
                         ID_Frecuencia = 6
                     Case "SEMESTRAL"
                         ID_Frecuencia = 7
