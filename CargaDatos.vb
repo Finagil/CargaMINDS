@@ -5,24 +5,27 @@ Module CargaDatos
     Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero_Finagil; User ID=finagil; pwd=finagil"
 
     Sub Main()
-        Console.WriteLine("Cargando promotores ...")
-        Carga_Promotores()
-        Console.WriteLine("Cargando clientes ...")
-        Carga_Clientes()
-        Console.WriteLine("Cargando clientes 2...")
-        Carga_ClientesII()
-        Console.WriteLine("Cargando cuentas ...")
-        Carga_Cuentas()
-        Console.WriteLine("Cargando pagos...")
-        Carga_Pagos()
-        'Console.WriteLine("Cargando pagos de Clientes Factoraje...")
-        Carga_FactorajeCliente()
-        'Console.WriteLine("Cargando pagos de Factoraje a Finagil...")
-        Carga_FactorajeANC()
-        Carga_FactorajePALM()
-
-
-
+        Dim Args As String() = Environment.GetCommandLineArgs()
+        If Args.Length = 1 Then
+            Console.WriteLine("Sin Argumentos ...")
+        Else
+            If Args(1).ToUpper = "FACTORAJE" Then
+                Console.WriteLine("Cargando pagos de Clientes Factoraje...")
+                Carga_FactorajeCliente()
+                Console.WriteLine("Cargando pagos de Factoraje a Finagil...")
+                Carga_FactorajeANC()
+                Carga_FactorajePALM()
+            ElseIf Args(1).ToUpper = "MINDS" Then
+                Console.WriteLine("Cargando promotores ...")
+                Carga_Promotores()
+                Console.WriteLine("Cargando clientes ...")
+                Carga_Clientes()
+                Console.WriteLine("Cargando clientes 2...")
+                Carga_ClientesII()
+                Console.WriteLine("Cargando cuentas ...")
+                Carga_Cuentas()
+            End If
+        End If
         Console.WriteLine("Terminado")
     End Sub
 
@@ -57,9 +60,6 @@ Module CargaDatos
         Dim cEstado As Double = 0
         Dim xEstado As String = ""
         Dim xMuni As String = ""
-
-        'Clientes.DeleteAll()
-
         Dim cnAgil As New SqlConnection(strConn)
         Dim cm1 As New SqlCommand()
         Dim cm2 As New SqlCommand()
@@ -102,11 +102,7 @@ Module CargaDatos
         Dim relAnexoCliente As DataRelation
 
         Try
-
-
-
             cDia = Mid(DTOC(Today), 7, 2) & Mid(DTOC(Today), 5, 2)
-            'cFecha = dtpProcesar.Value
             cnAgil.Open()
 
             With cm1
@@ -115,15 +111,6 @@ Module CargaDatos
                 "Inner Join Plazas ON Clientes.Plaza = Plazas.Plaza " &
                 "WHERE        (Cliente BETWEEN N'0' AND N'97337') " &
                 "ORDER BY Cliente"
-
-
-                '"Inner Join Plazas ON Clientes.Plaza = Plazas.Plaza where clientes.cliente = '06671' ORDER BY Cliente"
-
-
-
-
-                '.CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno FROM Clientes " & _
-                '"Inner Join Plazas ON Clientes.Plaza = Plazas.Plaza where siebel = 0 or siebel is null ORDER BY Cliente"
                 .Connection = cnAgil
             End With
             daCliente.Fill(dsAgil, "Clientes")
@@ -132,21 +119,12 @@ Module CargaDatos
                 .CommandType = CommandType.Text
                 .CommandText = "select Anexo, Fechacon, Flcan, Cliente FROM Anexos " &
                 "UNION Select Anexo, FechaAutorizacion as Fechacon, Flcan, Cliente FROM Avios ORDER BY Cliente"
-                '"UNION Select Anexo, FechaAutorizacion as Fechacon, Flcan, Cliente FROM Avios where cliente = '05869' ORDER BY Cliente"
-
-
-
-
                 .Connection = cnAgil
             End With
             daAnexos.Fill(dsAgil, "Anexos")
-
-            ' Establecer la relación entre Anexos y Clientes
-
             relAnexoCliente = New DataRelation("AnexoCliente", dsAgil.Tables("Clientes").Columns("Cliente"), dsAgil.Tables("Anexos").Columns("Cliente"))
             dsAgil.EnforceConstraints = False
             dsAgil.Relations.Add(relAnexoCliente)
-
             nCount = 1
             For Each drCliente In dsAgil.Tables("Clientes").Rows
                 cCliente = drCliente("Cliente")
@@ -266,9 +244,7 @@ Module CargaDatos
                     End Select
                 End If
 
-
                 drAnexos = drCliente.GetChildRows("AnexoCliente")
-
                 cPromo = drCliente("Promo")
                 If drCliente("Tipo") = "F" Or drCliente("Tipo") = "E" Then
                     cDescr = Trim(drCliente("Descr"))
@@ -289,8 +265,6 @@ Module CargaDatos
                             Else
                                 cApePaterno = cDato
                             End If
-
-
                         ElseIf i <= nCount - 2 Then
                             If cNombre = "" Then
                                 cNombre = cDato
@@ -370,19 +344,11 @@ Module CargaDatos
                         cApeMaterno = "NO PROPORCIONADO"
                 End Select
 
-
-
-
                 If Trim(cPromo) <> "" Then
                     If Trim(cNombre) <> "" Then
                         If Len(cNombre) > 100 Then
                             cNombre = Mid(cNombre, 1, 100)
                         End If
-                        'cRenglon = cActivo & "|" & cPromo & "|0|0|0|0|0|0|" & cIdGiro & "|0||0|0|N|N|" & cNombre & "|" & cApePaterno & "|"
-                        'cRenglon = cRenglon & cApeMaterno & "|" & cProfGiro & "|" & drCliente("RFC") & "|" & cTipo & "|1|" & CTOD(cFecha).ToShortDateString & "|" & Trim(drCliente("Calle")) & "|0|0|" & Trim(drCliente("Colonia"))
-                        'cRenglon = cRenglon & "|" & drCliente("Copos") & "|" & Trim(drCliente("Delegacion")) & "|" & nIdPlazam & "|" & nIDEstado & "|237|0|0|0|0|0|0|0|0|" & (dtpProcesar.Value).ToShortDateString & "|1|" & Trim(drCliente("CURP")) & "|"
-                        'cRenglon = cRenglon & Trim(drCliente("Telef1")) & "|1|" & cCliente & "|" & Val(cCliente) & "|" & (dtpProcesar.Value).ToShortDateString & "|0|" & CTOD(drCliente("Fecha1")).ToShortDateString & "|" & Trim(drCliente("DescPlaza")) & "||" & Trim(drCliente("EMail1")) & "|237|"
-                        'stmWriter.WriteLine(cRenglon)
                         xEstado = "%" & Trim(drCliente("DescPlaza")) & "%"
                         Select Case xEstado
                             Case "%ESTADO DE MEXICO%"
@@ -408,14 +374,6 @@ Module CargaDatos
                             Clientes.UpdateKYC(cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
                             , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, CTOD(drCliente("Fecha1")).ToShortDateString, cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
                         End If
-
-                        If cTipo = "2" Then
-                            cRenglon = cIdGiro & "|" & cActivo & "|1|" & cNombre & "||||" & drCliente("RFC") & "||0|" & Trim(drCliente("Telef1")) & "||||||||||||" & cCliente & "|"
-                        Else
-                            cRenglon = cIdGiro & "|" & cActivo & "|1||" & cNombre & "|" & cApePaterno & "|" & cApeMaterno & "|" & drCliente("RFC") & "||0|" & Trim(drCliente("Telef1")) & "||||||||||||" & cCliente & "|"
-                        End If
-                        'DataGridView1.DataSource = dsAgil
-
                     End If
                 End If
             Next
@@ -450,7 +408,7 @@ Module CargaDatos
         Dim nIdEdoNAC As Decimal
         Dim nIdPais As Decimal
         Dim nIdPlaza As Decimal
-        Dim xMuni As String = ""
+        Dim xAux As String = ""
         Dim xPlaza As String = ""
 
         Dim Municipio As New Minds2DSTableAdapters.Cat_MunicipioTableAdapter
@@ -461,8 +419,8 @@ Module CargaDatos
 
         With cm1
             .CommandType = CommandType.Text
-            .CommandText = "SELECT Datos_PLD.*, Nacionalidad, PaisNacimiento, Fecha1, RFC, CURP, Genero, EMail1,SerieFiel, Telef1 FROM Datos_PLD INNER JOIN Clientes ON Clientes.Cliente = Datos_PLD.Cliente ORDER BY Cliente"
-            '.CommandText = "SELECT Datos_PLD.*, Nacionalidad, PaisNacimiento, Fecha1, RFC, CURP, Genero, EMail1,SerieFiel, Telef1 FROM Datos_PLD INNER JOIN Clientes ON Clientes.Cliente = Datos_PLD.Cliente  where clientes.cliente = '06671' ORDER BY Cliente"
+            .CommandText = "SELECT Datos_PLD.*, Clientes.Nacionalidad, PaisNacimiento, Fecha1, RFC, CURP, Genero, EMail1,SerieFiel, Telef1, descr, Correo " _
+            & "FROM Datos_PLD INNER JOIN Clientes ON Clientes.Cliente = Datos_PLD.Cliente INNER JOIN Promotores ON Clientes.Promo = Promotores.Promotor ORDER BY Datos_PLD.Cliente"
 
             .Connection = cnAgil
         End With
@@ -478,6 +436,18 @@ Module CargaDatos
 
         cnAgil1.Open()
         For Each drDato In dsAgil.Tables("DatosPLD").Rows
+            If Trim(drDato("PLD_ClaveAE")) = "" Then
+                xAux = "El Cliente " & Trim(drDato("descr")) & " no tiene asignada actividad economica."
+                EnviaError("mtorres@finagil.com.mx,asangar@finagil.com.mx," & drDato("Correo"), xAux, "PLD_ClaveAE: " & Trim(drDato("descr")))
+                EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", xAux, "PLD_ClaveAE: " & Trim(drDato("descr")))
+                Continue For
+            End If
+            If IsDBNull(drDato("PLD_MontoMensual")) Then
+                xAux = "El Cliente " & Trim(drDato("descr")) & " no capturado un monto Mensual"
+                EnviaError("mtorres@finagil.com.mx,asangar@finagil.com.mx," & drDato("Correo"), xAux, "PLD_MontoMensual: " & Trim(drDato("descr")))
+                EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", xAux, "PLD_MontoMensual: " & Trim(drDato("descr")))
+                Continue For
+            End If
             nIdEdoNAC = 0
             cMcipio = Trim(drDato("PLD_Estado"))
             For Each drEdo In dsAgil.Tables("Estados").Rows
@@ -490,8 +460,8 @@ Module CargaDatos
                 End If
             Next
 
-            xMuni = "%" & Trim(drDato("pld_delegacion")) & "%"
-            Municipio.FillByMunicipio(TMunicipio, xMuni, nIdEdo) 'contiene acentos el DS
+            xAux = "%" & Trim(drDato("pld_delegacion")) & "%"
+            Municipio.FillByMunicipio(TMunicipio, xAux, nIdEdo) 'contiene acentos el DS
             If TMunicipio.Rows.Count > 0 Then
                 cMcipio = TMunicipio.Rows(0).Item(0)
             Else
@@ -596,8 +566,6 @@ Module CargaDatos
             With cm3
                 .CommandType = CommandType.Text
                 .CommandText = "SELECT * FROM Minds_CuentasAvio"
-                '.CommandText = "SELECT Clientes.cliente, Anexo + '-' + ciclo as Anexo, Fechaautorizacion, LineaActual, FechaTerminacion, Tipar FROM Clientes " & _
-                '               "INNER JOIN Avios On Avios.Cliente = Clientes.Cliente WHERE Flcan = 'A' and fechaTerminacion >= '20130101' and (minds = 0 or minds is null)"
                 .Connection = cnAgil
             End With
 
@@ -657,24 +625,16 @@ Module CargaDatos
                 End Select
                 Select Case drAnexo("Tipar")
                     Case "F"
-                        '    cProduct = "ARRENDAMIENTO"
-                        '   cSubProduct = "FINANCIERO"
                         cProduct = "1"
                     Case "P"
-                        ' cProduct = "ARRENDAMIENTO"
-                        ' cSubProduct = "PURO"
                         cProduct = "2"
                     Case "R"
-                        'cProduct = "CREDITO"
-                        'cSubProduct = "REFACCIONARIO"
                         cProduct = "8"
                     Case "L"
-                        'cProduct = "CREDITO"
-                        'cSubProduct = "REFACCIONARIO"
                         cProduct = "11"
+                    Case "B"
+                        cProduct = "12"
                     Case "S"
-                        ' cProduct = "CREDITO"
-                        ' cSubProduct = "SIMPLE"
                         If drAnexo("LiquidezInmediata") = True Then
                             cProduct = "11"
                         Else
@@ -683,7 +643,6 @@ Module CargaDatos
                 End Select
                 nCount = 0
                 Try
-                    'cRenglon = cAnexo & "|" & cCliente & "|" & cProduct & "|" & cImporte & "|" & cFecha & "|" & cFechafin & "|1|" & nPago.ToString & "|" & cSucursal & "|"
                     If Cuentas.Existe(cAnexo).Value = 0 Then
                         Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia)
                     Else
@@ -695,8 +654,6 @@ Module CargaDatos
                 End Try
             Next
 
-
-
             For Each drAnexo In dsAgil.Tables("Avios").Rows
                 If "081640011" = drAnexo("Anexo") Then
                     cAnexo = drAnexo("Anexo")
@@ -707,19 +664,13 @@ Module CargaDatos
                 cFecha = CTOD(drAnexo("FechaAutorizacion")).ToShortDateString
                 Select Case drAnexo("Tipar")
                     Case "A"
-                        ' cProduct = "CREDITO"
-                        'cSubProduct = "ANTICIPO DE AVIO"
                         cProduct = "3" ' como simple
-
                     Case "C"
-                        '   cProduct = "CREDITO"
-                        '   cSubProduct = "CUENTA CORRIENTE"
                         cProduct = "4"
                     Case "H"
-                        ' cProduct = "CREDITO"
-                        ' cSubProduct = "AVIO"
                         cProduct = "9"
                 End Select
+
                 Select Case UCase(drAnexo("Vencimiento"))
                     Case "SEMANAL"
                         ID_Frecuencia = 1
@@ -739,16 +690,13 @@ Module CargaDatos
                         ID_Frecuencia = 8
                 End Select
 
-                'cFechafin = CTOD(drAnexo("FechaTerminacion")).ToShortDateString
                 nPago = drAnexo("PLD_MontoMensual") * 3 ' solicitado por KArla Sanchez 31/05/2019
-
                 If drAnexo("Tipar") <> "AA" Then
                     If Cuentas.Existe(cAnexo).Value = 0 Then
                         Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia)
                     Else
                         Cuentas.UpdateCuenta(cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia, cAnexo)
                     End If
-
                     cAnexo = Mid(cAnexo, 1, 9)
                     cCiclo = Mid(cAnexo, 11, 2)
                     Con2.UpdateMinds(cCiclo, cAnexo)
@@ -758,10 +706,6 @@ Module CargaDatos
             EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message & "  " & cAnexo, "error en CUENTAS")
         End Try
         cnAgil.Close()
-    End Sub
-
-    Sub Carga_Pagos()
-
     End Sub
 
     Private Sub EnviaError(ByVal Para As String, ByVal Mensaje As String, ByVal Asunto As String)
@@ -821,7 +765,6 @@ Module CargaDatos
         Dim tBaan As New BaanDSTableAdapters.PagosBaanTableAdapter
         Dim fac As BaanDS.PagosPALMFinagilRow
 
-        ''tPAGOS.Fill(tPAG, Date.Now.AddDays(-40)) ' se quito por que ahora se va a la sigenrecia de pago!!!
         For Each fac In tPAG.Rows
             'Serie = Mid(fac.factura, 1, 3)
             'Factura = Mid(fac.factura, 4, 10)
@@ -878,6 +821,7 @@ Module CargaDatos
         Dim tCAN200 As New BaanDS.Cancelaciones200DataTable
         Dim tBaan200 As New BaanDSTableAdapters.Cancelaciones200TableAdapter
         Dim Can200 As BaanDS.Cancelaciones200Row
+        tCancel200.CommandTimeout = 60
         tCancel200.Fill(tCAN200, Date.Now.AddDays(diasMenos))
         For Each Can200 In tCAN200.Rows
             If ta.ExisteCancelacion(Can200.t_ttyp, Can200.t_invn) <= 0 Then
@@ -889,6 +833,7 @@ Module CargaDatos
         Dim tCAN205 As New BaanDS.Cancelaciones205DataTable
         Dim tBaan205 As New BaanDSTableAdapters.Cancelaciones205TableAdapter
         Dim Can205 As BaanDS.Cancelaciones205Row
+        tCancel205.CommandTimeout = 60
         tCancel205.Fill(tCAN205, Date.Now.AddDays(diasMenos))
         For Each Can205 In tCAN205.Rows
             If ta.ExisteCancelacion(Can205.t_ttyp, Can205.t_invn) <= 0 Then
@@ -900,6 +845,7 @@ Module CargaDatos
         Dim tCAN208 As New BaanDS.Cancelaciones208DataTable
         Dim tBaan208 As New BaanDSTableAdapters.Cancelaciones208TableAdapter
         Dim Can208 As BaanDS.Cancelaciones208Row
+        tCancel208.CommandTimeout = 60
         tCancel208.Fill(tCAN208, Date.Now.AddDays(diasMenos))
         For Each Can208 In tCAN208.Rows
             If ta.ExisteCancelacion(Can208.t_ttyp, Can208.t_invn) <= 0 Then
@@ -911,6 +857,7 @@ Module CargaDatos
         Dim tCAN209 As New BaanDS.Cancelaciones209DataTable
         Dim tBaan209 As New BaanDSTableAdapters.Cancelaciones209TableAdapter
         Dim Can209 As BaanDS.Cancelaciones209Row
+        tCancel209.CommandTimeout = 60
         tCancel209.Fill(tCAN209, Date.Now.AddDays(diasMenos))
         For Each Can209 In tCAN209.Rows
             If ta.ExisteCancelacion(Can209.t_ttyp, Can209.t_invn) <= 0 Then
@@ -922,6 +869,7 @@ Module CargaDatos
         Dim tCAN206 As New BaanDS.Cancelaciones206DataTable
         Dim tBaan206 As New BaanDSTableAdapters.Cancelaciones206TableAdapter
         Dim Can206 As BaanDS.Cancelaciones206Row
+        tCancel206.CommandTimeout = 60
         tCancel206.Fill(tCAN206, Date.Now.AddDays(diasMenos))
         For Each Can206 In tCAN206.Rows
             If ta.ExisteCancelacion(Can206.t_ttyp, Can206.t_invn) <= 0 Then
@@ -933,6 +881,7 @@ Module CargaDatos
         Dim tCAN207 As New BaanDS.Cancelaciones207DataTable
         Dim tBaan207 As New BaanDSTableAdapters.Cancelaciones207TableAdapter
         Dim Can207 As BaanDS.Cancelaciones207Row
+        tCancel207.CommandTimeout = 60
         tCancel207.Fill(tCAN207, Date.Now.AddDays(diasMenos))
         For Each Can207 In tCAN207.Rows
             If ta.ExisteCancelacion(Can207.t_ttyp, Can207.t_invn) <= 0 Then

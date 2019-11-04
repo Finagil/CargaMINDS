@@ -1,24 +1,82 @@
-﻿Partial Class BaanDS
-   
-
-    Partial Class SugerenciaBaanDataTable
-
-        Private Sub SugerenciaBaanDataTable_SugerenciaBaanRowChanging(ByVal sender As System.Object, ByVal e As SugerenciaBaanRowChangeEvent) Handles Me.SugerenciaBaanRowChanging
-
-        End Sub
-
-    End Class
-
-    Partial Class PagosBaanDataTable
-
-
-        Private Sub PagosBaanDataTable_ColumnChanging(ByVal sender As System.Object, ByVal e As System.Data.DataColumnChangeEventArgs) Handles Me.ColumnChanging
-            If (e.Column.ColumnName = Me.serieColumn.ColumnName) Then
-                'Add user code here
-            End If
-
-        End Sub
-
-    End Class
-
+﻿Imports System.Data.Odbc
+Partial Class BaanDS
 End Class
+
+Namespace BaanDSTableAdapters
+
+    Partial Public Class Cancelaciones200TableAdapter
+        Public Property CommandTimeout As Int32
+            Get
+                Return Me.CommandCollection(0).CommandTimeout
+            End Get
+            Set(value As Int32)
+                For Each cmd As OdbcCommand In Me.CommandCollection
+                    cmd.CommandTimeout = value
+                Next
+            End Set
+        End Property
+    End Class
+
+    Partial Public Class Cancelaciones205TableAdapter
+        Public Property CommandTimeout As Int32
+            Get
+                Return Me.CommandCollection(0).CommandTimeout
+            End Get
+            Set(value As Int32)
+                For Each cmd As OdbcCommand In Me.CommandCollection
+                    cmd.CommandTimeout = value
+                Next
+            End Set
+        End Property
+    End Class
+
+    Partial Public Class Cancelaciones206TableAdapter
+        Public Property CommandTimeout As Int32
+            Get
+                Return Me.CommandCollection(0).CommandTimeout
+            End Get
+            Set(value As Int32)
+                For Each cmd As OdbcCommand In Me.CommandCollection
+                    cmd.CommandTimeout = value
+                Next
+            End Set
+        End Property
+    End Class
+    Partial Public Class Cancelaciones207TableAdapter
+        Public Property CommandTimeout As Int32
+            Get
+                Return Me.CommandCollection(0).CommandTimeout
+            End Get
+            Set(value As Int32)
+                For Each cmd As OdbcCommand In Me.CommandCollection
+                    cmd.CommandTimeout = value
+                Next
+            End Set
+        End Property
+    End Class
+    Partial Public Class Cancelaciones208TableAdapter
+        Public Property CommandTimeout As Int32
+            Get
+                Return Me.CommandCollection(0).CommandTimeout
+            End Get
+            Set(value As Int32)
+                For Each cmd As OdbcCommand In Me.CommandCollection
+                    cmd.CommandTimeout = value
+                Next
+            End Set
+        End Property
+    End Class
+    Partial Public Class Cancelaciones209TableAdapter
+        Public Property CommandTimeout As Int32
+            Get
+                Return Me.CommandCollection(0).CommandTimeout
+            End Get
+            Set(value As Int32)
+                For Each cmd As OdbcCommand In Me.CommandCollection
+                    cmd.CommandTimeout = value
+                Next
+            End Set
+        End Property
+    End Class
+
+End Namespace
