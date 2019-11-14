@@ -2,7 +2,7 @@ Imports System.Data.SqlClient
 Imports System.Net.Mail
 Module CargaDatos
     Dim strConn As String = "Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
-    Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero_Finagil; User ID=finagil; pwd=finagil"
+    Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil"
 
     Sub Main()
         Dim Args As String() = Environment.GetCommandLineArgs()
@@ -30,8 +30,8 @@ Module CargaDatos
     End Sub
 
     Sub Carga_Promotores()
-        Dim ta As New CargaMINDS.ProductionDataSetTableAdapters.PromotoresTableAdapter
-        Dim ta1 As New CargaMINDS.Minds2DSTableAdapters.layoutsFuncionarioTableAdapter
+        Dim ta As New ProductionDataSetTableAdapters.PromotoresTableAdapter
+        Dim ta1 As New Minds2DSTableAdapters.layoutsFuncionarioTableAdapter
         Dim PromoOrg As New ProductionDataSet.PromotoresDataTable
         Try
             ta.Fill(PromoOrg)
@@ -94,6 +94,7 @@ Module CargaDatos
         Dim cDelegacion As String
         Dim IdSexo As String
         Dim nIdPlazam As Integer
+        Dim FechaNac As Date
 
         Dim dsReporte As New DataSet()
         Dim daCliente As New SqlDataAdapter(cm1)
@@ -107,7 +108,7 @@ Module CargaDatos
 
             With cm1
                 .CommandType = CommandType.Text
-                .CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno, genero FROM Clientes " &
+                .CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno, genero, FechaNac FROM Clientes " &
                 "Inner Join Plazas ON Clientes.Plaza = Plazas.Plaza " &
                 "WHERE        (Cliente BETWEEN N'0' AND N'97337') " &
                 "ORDER BY Cliente"
@@ -367,12 +368,13 @@ Module CargaDatos
                         Else
                             cMuni = 0
                         End If
+                        FechaNac = drCliente("FechaNac")
                         If Clientes.Exsiste(Trim(drCliente("Cliente"))).Value = 0 Then
                             Clientes.Insert(Trim(drCliente("Cliente")), cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, CTOD(drCliente("Fecha1")).ToShortDateString, cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
                         Else
                             Clientes.UpdateKYC(cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, CTOD(drCliente("Fecha1")).ToShortDateString, cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
                         End If
                     End If
                 End If
@@ -428,7 +430,7 @@ Module CargaDatos
 
         With cm3
             .CommandType = CommandType.Text
-            .CommandText = "SELECT Cat_Estado.* FROM [PrevencionLavadoDinero_Finagil].[dbo].[Cat_Estado]"
+            .CommandText = "SELECT Cat_Estado.* FROM [PrevencionLavadoDinero].[dbo].[Cat_Estado]"
             .Connection = cnAgil1
         End With
         daEstado.Fill(dsAgil, "Estados")
