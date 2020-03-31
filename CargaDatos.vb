@@ -108,7 +108,7 @@ Module CargaDatos
 
             With cm1
                 .CommandType = CommandType.Text
-                .CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno, genero, FechaNac FROM Clientes " &
+                .CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno, genero, FechaNac, Abreviado FROM Clientes " &
                 "Inner Join Plazas ON Clientes.Plaza = Plazas.Plaza " &
                 "WHERE        (Cliente BETWEEN N'0' AND N'97337') " &
                 "ORDER BY Cliente"
@@ -135,46 +135,14 @@ Module CargaDatos
                 cTipo = drCliente("Tipo")
                 cGiro = drCliente("Giro")
                 cDelegacion = Trim(drCliente("Delegacion"))
-                nIDEstado = drCliente("Plaza")
                 IdSexo = drCliente("Genero")
                 nIdPlazam = 0
-                Select Case drCliente("Plaza")
-                    Case Is = "07"
-                        nIDEstado = 5
-                    Case Is = "08"
-                        nIDEstado = 6
-                    Case Is = "05"
-                        nIDEstado = 7
-                    Case Is = "06"
-                        nIDEstado = 8
-                    Case Is = "12"
-                        nIDEstado = 11
-                    Case Is = "13"
-                        nIDEstado = 12
-                    Case Is = "14"
-                        nIDEstado = 13
-                    Case Is = "15"
-                        nIDEstado = 14
-                    Case Is = "11"
-                        nIDEstado = 15
-                    Case Is = "33"
-                        nIDEstado = 9
-                End Select
 
-                With cm3
-                    .CommandType = CommandType.Text
-                    .CommandText = "SELECT IdPlazam, NombrePlaza FROM PlazasMinds WHERE IdEstado = " & nIDEstado
-                    .Connection = cnAgil
-                End With
-                daPlazas.Fill(dsAgil, "Plazas")
-
-
-                For Each drPlaza In dsAgil.Tables("Plazas").Rows
-                    If Trim(cDelegacion) = Trim(drPlaza("NombrePlaza")) Then
-                        nIdPlazam = drPlaza("IdPlazam")
-                    End If
-                Next
-                dsAgil.Tables.Remove("Plazas")
+                Try
+                    nIDEstado = Clientes.SacaIdEstado(drCliente("Abreviado").ToString.Trim)
+                Catch ex As Exception
+                    EnviaError("ecacerest@lamoderna.com.mx,viapolo@lamoderna.com.mx", ex.Message, "error en cLIENTES")
+                End Try
 
                 If nIdPlazam = 0 Then
                     Select Case nIDEstado
@@ -371,10 +339,10 @@ Module CargaDatos
                         FechaNac = drCliente("FechaNac")
                         If Clientes.Exsiste(Trim(drCliente("Cliente"))).Value = 0 Then
                             Clientes.Insert(Trim(drCliente("Cliente")), cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("yyyy/MM/dd"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
                         Else
                             Clientes.UpdateKYC(cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("yyyy/MM/dd"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
                         End If
                     End If
                 End If

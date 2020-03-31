@@ -9,8 +9,7 @@
 
 End Class
 
-Namespace CargaMINDS.Minds2DSTableAdapters
-
+Namespace Minds2DSTableAdapters
     Partial Public Class layoutsKYCTableAdapter
     End Class
 End Namespace
