@@ -339,10 +339,10 @@ Module CargaDatos
                         FechaNac = drCliente("FechaNac")
                         If Clientes.Exsiste(Trim(drCliente("Cliente"))).Value = 0 Then
                             Clientes.Insert(Trim(drCliente("Cliente")), cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("yyyy/MM/dd"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
                         Else
                             Clientes.UpdateKYC(cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("yyyy/MM/dd"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
                         End If
                     End If
                 End If
