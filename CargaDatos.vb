@@ -499,7 +499,7 @@ Module CargaDatos
 
         Dim cDia As String
         Dim i As Integer
-        Dim cRenglon As String
+        Dim cMes As String = Date.Now.AddMonths(-1).ToString("yyyyMM") & "%"
         Dim cImporte As String
         Dim cAnexo As String
         Dim cCiclo As String
@@ -511,11 +511,8 @@ Module CargaDatos
         Dim cSucursal As String
         Dim ID_Frecuencia As Integer
 
-
-        Dim cm2 As New SqlCommand()
         Dim dsReporte As New DataSet()
         Dim daAnexos As New SqlDataAdapter(cm1)
-        Dim daEdoctav As New SqlDataAdapter(cm2)
         Dim daAvios As New SqlDataAdapter(cm3)
         Dim daCuentasConcetradoras As New SqlDataAdapter(cm4)
         Dim relAnexoEdoctav As DataRelation
@@ -548,28 +545,17 @@ Module CargaDatos
             ' Este Stored Procedure trae la tabla de amortización del equipo de todos los contratos activos
             ' con fecha de contratación menor o igual a la de proceso
 
-            With cm2
-                .CommandType = CommandType.Text
-                .CommandText = "SELECT        Edoctav.Anexo, MAX(Edoctav.Letra) AS Letra, MAX(Edoctav.Feven) AS Feven, Edoctav.Abcap, Edoctav.Inter AS Inter, Edoctav.Iva AS Iva, SUM(Edoctav.IvaCapital) AS IvaCapital, " _
-                                & "                         SUBSTRING(Edoctav.Feven, 1, 6) AS Mes, Edoctav.Nufac AS NufacT" _
-                                & " FROM            Edoctav INNER JOIN" _
-                                & " Minds_MovTradicionales ON Edoctav.Anexo = Minds_MovTradicionales.Anexo" _
-                                & " WHERE        (Edoctav.Feven > N'20100101')" _
-                                & " GROUP BY Edoctav.Anexo, SUBSTRING(Edoctav.Feven, 1, 6), Edoctav.Nufac,Edoctav.Abcap,Edoctav.INTER,Edoctav.IVA" _
-                                & " ORDER BY Edoctav.Anexo, Letra "
-                .Connection = cnAgil
-            End With
             daAnexos.Fill(dsAgil, "Anexos")
-            daEdoctav.Fill(dsAgil, "Edoctav")
             daAvios.Fill(dsAgil, "Avios")
 
-            relAnexoEdoctav = New DataRelation("AnexoEdoctav", dsAgil.Tables("Anexos").Columns("Anexo"), dsAgil.Tables("Edoctav").Columns("Anexo"))
-            dsAgil.EnforceConstraints = False
-            dsAgil.Relations.Add(relAnexoEdoctav)
+            'relAnexoEdoctav = New DataRelation("AnexoEdoctav", dsAgil.Tables("Anexos").Columns("Anexo"), dsAgil.Tables("Edoctav").Columns("Anexo"))
+            'dsAgil.EnforceConstraints = False
+            'dsAgil.Relations.Add(relAnexoEdoctav)
 
             For Each drAnexo In dsAgil.Tables("Anexos").Rows
                 cAnexo = drAnexo("Anexo")
-                nPago = CDec(drAnexo("PLD_MontoMensual") * 3) ' solicitado por KArla Sanchez 31/05/2019
+                'nPago = CDec(drAnexo("PLD_MontoMensul") * 3) ' solicitado por KArla Sanchez 31/05/2019
+                nPago = (Con1.PagoMensual(cAnexo, cMes) * 3) ' solicitado por KArla Sanchez 13/04/2020
                 cCliente = drAnexo("Cliente")
                 cSucursal = drAnexo("Mensu").ToString
                 cImporte = drAnexo("MtoFin").ToString
@@ -661,6 +647,7 @@ Module CargaDatos
                 End Select
 
                 nPago = drAnexo("PLD_MontoMensual") * 3 ' solicitado por KArla Sanchez 31/05/2019
+                nPago = drAnexo("LineaActual") * 3 ' solicitado por KArla Sanchez 13/04/2020
                 If drAnexo("Tipar") <> "AA" Then
                     If Cuentas.Existe(cAnexo).Value = 0 Then
                         Cuentas.Insert(cAnexo, cCliente, 7, cProduct, cImporte, cFecha, drAnexo("Feven"), 1, nPago.ToString, 1, ID_Frecuencia)
