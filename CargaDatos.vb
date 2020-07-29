@@ -1,8 +1,6 @@
 Imports System.Data.SqlClient
 Imports System.Net.Mail
 Module CargaDatos
-    Dim strConn As String = "Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015"
-    Dim strConn2 As String = "Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil"
 
     Sub Main()
         Dim Args As String() = Environment.GetCommandLineArgs()
@@ -24,6 +22,9 @@ Module CargaDatos
                 Carga_ClientesII()
                 Console.WriteLine("Cargando cuentas ...")
                 Carga_Cuentas()
+            ElseIf Args(1).ToUpper = "MINDS2" Then
+                Console.WriteLine("Cargando clientes 2...")
+                Carga_ClientesII()
             End If
         End If
         Console.WriteLine("Terminado")
@@ -37,7 +38,7 @@ Module CargaDatos
             ta.Fill(PromoOrg)
 
             For Each r As ProductionDataSet.PromotoresRow In PromoOrg.Rows
-                If ta1.Existe(r.Promotor, Trim(r.APaterno)).Value = 0 Then
+                If ta1.Existe(r.Promotor) = 0 Then
                     ta1.Insert(r.Promotor, Trim(r.Nombre), Trim(r.APaterno), Trim(r.AMaterno), Trim(r.Puesto), r.IDPlaza, r.Nacionalidad, CTOD(r.FechaCarga))
                 Else
                     ta1.UpdateEmpleado(Trim(r.Nombre), Trim(r.APaterno), Trim(r.AMaterno), Trim(r.Puesto), r.IDPlaza, r.Nacionalidad, CTOD(r.FechaCarga), r.Promotor)
@@ -60,7 +61,7 @@ Module CargaDatos
         Dim cEstado As Double = 0
         Dim xEstado As String = ""
         Dim xMuni As String = ""
-        Dim cnAgil As New SqlConnection(strConn)
+        Dim cnAgil As New SqlConnection(My.Settings.ConnectionFinagil)
         Dim cm1 As New SqlCommand()
         Dim cm2 As New SqlCommand()
         Dim cm3 As New SqlCommand()
@@ -108,8 +109,9 @@ Module CargaDatos
 
             With cm1
                 .CommandType = CommandType.Text
-                .CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno, genero, FechaNac, Abreviado FROM Clientes " &
+                .CommandText = "SELECT Descr,Cliente,Promo,Tipo,Calle, Colonia,Delegacion,Copos,Telef1,Giro,Clientes.Plaza, DescPlaza, RFC,Curp,Email1, Fecha1, NombreCliente, ApellidoPaterno, ApellidoMaterno, genero, FechaNac, Abreviado, Nombre_sucursal FROM Clientes " &
                 "Inner Join Plazas ON Clientes.Plaza = Plazas.Plaza " &
+                "Inner Join sucursales ON Clientes.sucursal = sucursales.id_sucursal " &
                 "WHERE        (Cliente BETWEEN N'0' AND N'97337') " &
                 "ORDER BY Cliente"
                 .Connection = cnAgil
@@ -339,10 +341,10 @@ Module CargaDatos
                         FechaNac = drCliente("FechaNac")
                         If Clientes.Exsiste(Trim(drCliente("Cliente"))).Value = 0 Then
                             Clientes.Insert(Trim(drCliente("Cliente")), cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2)
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Nombre_Sucursal")))
                         Else
                             Clientes.UpdateKYC(cActivo, 0, 0, 0, 0, 0, 0, cPromo, "Credito", "", cIdGiro, 0, 0, 0, Trim(cNombre), Trim(cApePaterno), Trim(cApeMaterno), cProfGiro, drCliente("RFC"), cTipo, 1, Date.Now.ToShortDateString, Trim(drCliente("Calle")), 0, 0, Trim(drCliente("Colonia")), drCliente("Copos") _
-                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Cliente")))
+                            , cMuni, nIdPlazam, nIDEstado, 236, 0, 0, 0, 0, 0, 0, 0, 0, Date.Now.ToShortDateString, 1, Trim(drCliente("CURP")), Trim(drCliente("Telef1")), 1, Val(cCliente), Date.Now.ToShortDateString, IdSexo, FechaNac.ToString("dd/MM/yyyy"), cEstado, "", Trim(drCliente("EMail1")), 236, 0, Date.Now.ToShortDateString, 2, Trim(drCliente("Nombre_Sucursal")), Trim(drCliente("Cliente")))
                         End If
                     End If
                 End If
@@ -355,8 +357,8 @@ Module CargaDatos
     End Sub
 
     Sub Carga_ClientesII()
-        Dim cnAgil As SqlConnection = New SqlConnection(strConn)
-        Dim cnAgil1 As SqlConnection = New SqlConnection(strConn2)
+        Dim cnAgil As SqlConnection = New SqlConnection(My.Settings.ConnectionFinagil)
+        Dim cnAgil1 As SqlConnection = New SqlConnection(My.Settings.ConnectionMINDS)
         Dim cm1 As New SqlCommand()
         Dim cm2 As New SqlCommand()
         Dim cm3 As New SqlCommand()
@@ -390,7 +392,9 @@ Module CargaDatos
         With cm1
             .CommandType = CommandType.Text
             .CommandText = "SELECT Datos_PLD.*, Clientes.Nacionalidad, PaisNacimiento, Fecha1, RFC, CURP, Genero, EMail1,SerieFiel, Telef1, descr, Correo " _
-            & "FROM Datos_PLD INNER JOIN Clientes ON Clientes.Cliente = Datos_PLD.Cliente INNER JOIN Promotores ON Clientes.Promo = Promotores.Promotor ORDER BY Datos_PLD.Cliente"
+            & "FROM Datos_PLD INNER JOIN Clientes ON Clientes.Cliente = Datos_PLD.Cliente INNER JOIN Promotores ON Clientes.Promo = Promotores.Promotor " _
+            & "where Clientes.cliente >= '0' " _
+            & "ORDER BY Datos_PLD.Cliente"
 
             .Connection = cnAgil
         End With
@@ -398,7 +402,7 @@ Module CargaDatos
 
         With cm3
             .CommandType = CommandType.Text
-            .CommandText = "SELECT Cat_Estado.* FROM [PrevencionLavadoDinero].[dbo].[Cat_Estado]"
+            .CommandText = "SELECT Cat_Estado.* FROM [Cat_Estado]"
             .Connection = cnAgil1
         End With
         daEstado.Fill(dsAgil, "Estados")
@@ -446,8 +450,8 @@ Module CargaDatos
                 nIdPlaza = 99999999
             End If
 
-            cNext = IIf(Trim(drDato("PLD_Numext")) = "", "0", drDato("PLD_Numext"))
-            cNint = IIf(Trim(drDato("PLD_Numint")) = "", "0", drDato("PLD_Numint"))
+            cNext = IIf(Trim(drDato("PLD_Numext")) = "", "", drDato("PLD_Numext"))
+            cNint = IIf(Trim(drDato("PLD_Numint")) = "", "", drDato("PLD_Numint"))
             cNac = IIf(Trim(drDato("Nacionalidad")) = "", 1, IIf(Trim(drDato("Nacionalidad")) = "MEXICANA", 1, 2))
             strUpdate = "UPDATE layoutsKYC SET DirNo = '" & cNext & "'"
             strUpdate = strUpdate & ", Interior = '" & cNint & "'"
@@ -489,7 +493,7 @@ Module CargaDatos
         Dim dsAgil As New DataSet()
         Dim Pagos As New Minds2DSTableAdapters.layoutsCreditoTableAdapter
         Dim Cuentas As New Minds2DSTableAdapters.layoutsCuentaTableAdapter
-        Dim cnAgil As New SqlConnection(strConn)
+        Dim cnAgil As New SqlConnection(My.Settings.ConnectionFinagil)
         Dim cm1 As New SqlCommand()
         Dim cm3 As New SqlCommand()
         Dim cm4 As New SqlCommand()

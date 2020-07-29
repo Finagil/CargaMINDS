@@ -17,7 +17,28 @@
       <Value Profile="(Default)">26</Value>
     </Setting>
     <Setting Name="SMTP_creden" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ecacerest,c4c3r1t0s,cmoderna</Value>
+      <Value Profile="(Default)">ecacerest,h3Pd1BsQ,cmoderna</Value>
+    </Setting>
+    <Setting Name="ConnectionFinagil" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015</Value>
+    </Setting>
+    <Setting Name="ConnectionMINDS" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd=finagil</Value>
+    </Setting>
+    <Setting Name="ConnectionStringMINDS" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Provider=SQLOLEDB;Data Source=SERVER-MINDS\MINDS;Persist Security Info=True;Password=finagil;User ID=finagil;Initial Catalog=PrevencionLavadoDinero&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Provider=SQLOLEDB;Data Source=SERVER-MINDS\MINDS;Persist Security Info=True;Password=finagil;User ID=finagil;Initial Catalog=PrevencionLavadoDinero</Value>
     </Setting>
   </Settings>
 </SettingsFile>

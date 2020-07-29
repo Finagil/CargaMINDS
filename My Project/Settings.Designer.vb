@@ -91,7 +91,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("ecacerest,c4c3r1t0s,cmoderna")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("ecacerest,h3Pd1BsQ,cmoderna")>  _
         Public Property SMTP_creden() As String
             Get
                 Return CType(Me("SMTP_creden"),String)
@@ -99,6 +99,38 @@ Namespace My
             Set
                 Me("SMTP_creden") = value
             End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Server=SERVER-RAID2; DataBase=production; User ID=User_PRO; pwd=User_PRO2015")>  _
+        Public ReadOnly Property ConnectionFinagil() As String
+            Get
+                Return CType(Me("ConnectionFinagil"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Server=SERVER-MINDS\MINDS; DataBase=PrevencionLavadoDinero; User ID=finagil; pwd="& _ 
+            "finagil")>  _
+        Public ReadOnly Property ConnectionMINDS() As String
+            Get
+                Return CType(Me("ConnectionMINDS"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Provider=SQLOLEDB;Data Source=SERVER-MINDS\MINDS;Persist Security Info=True;Passw"& _ 
+            "ord=finagil;User ID=finagil;Initial Catalog=PrevencionLavadoDinero")>  _
+        Public ReadOnly Property ConnectionStringMINDS() As String
+            Get
+                Return CType(Me("ConnectionStringMINDS"),String)
+            End Get
         End Property
     End Class
 End Namespace
